@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Loading() {
   return (
-    <div className="w-screen lg:w-[50vw] xl:w-[60vw] h-screen flex justify-center items-center">
+    <div className="w-full flex h-full flex-1 flex-col justify-center items-center">
       <div className="relative">
         {/* Outer loader */}
         <Image

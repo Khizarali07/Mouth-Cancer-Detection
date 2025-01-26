@@ -32,8 +32,8 @@ const MobileNavigation = ({
       <Image
         src="/assets/icons/logo-full-brand.png"
         alt="logo"
-        width={120}
-        height={45}
+        width={150}
+        height={70}
         className="h-auto"
       />
 

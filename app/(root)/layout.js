@@ -6,7 +6,6 @@ import Header from "@/components/header";
 import { getCurrentUser } from "@/lib/actions/userActions";
 import { redirect } from "next/navigation";
 import { Toaster } from "@/components/ui/toaster";
-
 export const dynamic = "force-dynamic";
 
 const Layout = async ({ children }) => {

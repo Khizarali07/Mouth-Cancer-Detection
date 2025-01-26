@@ -4,21 +4,21 @@ export const navItems = [
     icon: "/assets/icons/dashboard.svg",
     url: "/",
   },
-  // {
-  //   name: "Documents",
-  //   icon: "/assets/icons/documents.svg",
-  //   url: "/documents",
-  // },
-  // {
-  //   name: "Account",
-  //   icon: "/assets/icons/images.svg",
-  //   url: "/images",
-  // },
-  // {
-  //   name: "Contact us",
-  //   icon: "/assets/icons/video.svg",
-  //   url: "/media",
-  // },
+  {
+    name: "Documents",
+    icon: "/assets/icons/documents.svg",
+    url: "/documents",
+  },
+  {
+    name: "Settings",
+    icon: "/assets/icons/setting.svg",
+    url: "/settings",
+  },
+  {
+    name: "Contact",
+    icon: "/assets/icons/phone.svg",
+    url: "/contact",
+  },
 ];
 
 export const actionsDropdownItems = [

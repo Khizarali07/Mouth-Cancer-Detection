@@ -8,7 +8,7 @@ import Image from "next/image";
 import Thumbnail from "@/components/Thumbnail";
 import { MAX_FILE_SIZE } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
-import { uploadFile } from "@/lib/actions/fileActions";
+import { getTotalSpaceUsed, uploadFile } from "@/lib/actions/fileActions";
 import { usePathname } from "next/navigation";
 
 const FileUploader = ({ ownerId, accountId, className }) => {
@@ -21,6 +21,11 @@ const FileUploader = ({ ownerId, accountId, className }) => {
       setFiles(acceptedFiles);
 
       const uploadPromises = acceptedFiles.map(async (file) => {
+        // Fetch the current user's total space usage
+        const totalSpace = await getTotalSpaceUsed();
+        const usedSpace = (await totalSpace?.used) || 0;
+        const availableSpace = (await totalSpace?.all) || 0;
+
         if (file.size > MAX_FILE_SIZE) {
           setFiles((prevFiles) =>
             prevFiles.filter((f) => f.name !== file.name)
@@ -35,6 +40,31 @@ const FileUploader = ({ ownerId, accountId, className }) => {
             ),
             className: "error-toast",
           });
+        }
+
+        // Check if there is enough available space
+        if (usedSpace >= availableSpace) {
+          setFiles((prevFiles) =>
+            prevFiles.filter((f) => f.name !== file.name)
+          );
+
+          return toast({
+            description: (
+              <p className="body-2 text-white">
+                Storage limit reached. Please delete some files to upload new
+                ones.
+              </p>
+            ),
+            className: "error-toast",
+          });
+        }
+
+        const response = await fetch("http://localhost:5000/predict");
+
+        const data = await response.json();
+        alert(data.prediction); // This will show "Detection in progress..."
+        if (response.ok) {
+          console.log("Prediction:", data.prediction);
         }
 
         return uploadFile({ file, ownerId, accountId, path }).then(
@@ -62,7 +92,10 @@ const FileUploader = ({ ownerId, accountId, className }) => {
 
   return (
     <div {...getRootProps()} className="cursor-pointer">
-      <input {...getInputProps()} />
+      <input
+        {...getInputProps()}
+        accept=".dcm" // Restrict to .dcm files
+      />
       <Button type="button" className={cn("uploader-button", className)}>
         <Image
           src="/assets/icons/upload.svg"
@@ -70,7 +103,7 @@ const FileUploader = ({ ownerId, accountId, className }) => {
           width={24}
           height={24}
         />{" "}
-        <p>Upload</p>
+        <p>Upload Your MRI Scan Here</p>
       </Button>
       {files.length > 0 && (
         <ul className="uploader-preview-list">

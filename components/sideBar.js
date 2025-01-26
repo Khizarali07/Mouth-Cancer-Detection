@@ -59,7 +59,7 @@ const Sidebar = ({ fullName, avatar, email }) => {
       <Image
         src="/assets/images/file.png"
         alt="logo"
-        width={200}
+        width={185}
         height={200}
       />
 
