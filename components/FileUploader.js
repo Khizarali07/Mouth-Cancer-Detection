@@ -9,12 +9,13 @@ import Thumbnail from "@/components/Thumbnail";
 import { MAX_FILE_SIZE } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { getTotalSpaceUsed, uploadFile } from "@/lib/actions/fileActions";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 
 const FileUploader = ({ ownerId, accountId, className }) => {
   const path = usePathname();
   const { toast } = useToast();
   const [files, setFiles] = useState([]);
+  const [Result, setResult] = useState("");
 
   const onDrop = useCallback(
     async (acceptedFiles) => {
@@ -59,23 +60,49 @@ const FileUploader = ({ ownerId, accountId, className }) => {
           });
         }
 
-        const response = await fetch("http://localhost:5000/predict");
+        // 🔥 Sending file to Next.js API for prediction
+        const formData = new FormData();
+        formData.append("file", file);
 
-        const data = await response.json();
-        alert(data.prediction); // This will show "Detection in progress..."
-        if (response.ok) {
-          console.log("Prediction:", data.prediction);
-        }
+        try {
+          const response = await fetch("/api/predict", {
+            method: "POST",
+            body: formData,
+          });
 
-        return uploadFile({ file, ownerId, accountId, path }).then(
-          (uploadedFile) => {
-            if (uploadedFile) {
-              setFiles((prevFiles) =>
-                prevFiles.filter((f) => f.name !== file.name)
-              );
-            }
+          const data = await response.json();
+
+          if (response.ok) {
+            const prediction = `Prediction: ${data.prediction}, Confidence: ${data.confidence}`;
+            setResult(prediction); // Update Result with the prediction
+
+            toast({
+              description: prediction,
+              className: "success-toast",
+            });
+
+            // Only upload the file if prediction is successful
+            return uploadFile({
+              file,
+              ownerId,
+              accountId,
+              path,
+              Result: prediction,
+            }).then((uploadedFile) => {
+              if (uploadedFile) {
+                setFiles((prevFiles) =>
+                  prevFiles.filter((f) => f.name !== file.name)
+                );
+                redirect(`/documents/${uploadedFile.$id}`);
+              }
+            });
+          } else {
+            alert("Prediction failed: " + data.error);
           }
-        );
+        } catch (error) {
+          console.error("Error in prediction:", error);
+          alert("Error occurred while making prediction.");
+        }
       });
 
       await Promise.all(uploadPromises);
@@ -94,7 +121,7 @@ const FileUploader = ({ ownerId, accountId, className }) => {
     <div {...getRootProps()} className="cursor-pointer">
       <input
         {...getInputProps()}
-        accept=".dcm" // Restrict to .dcm files
+        accept=".jpg" // Restrict to .dcm files
       />
       <Button type="button" className={cn("uploader-button", className)}>
         <Image

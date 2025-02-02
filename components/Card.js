@@ -5,9 +5,11 @@ import FormattedDateTime from "@/components/FormattedDateTime"; // Component to 
 import ActionDropdown from "@/components/ActionDropdown"; // Component to display a dropdown menu with file actions
 
 const Card = ({ file }) => {
+  console.log("thsi is a file :", file);
+
   return (
     // A clickable card linking to the file's URL in a new tab
-    <Link href={file.url} target="_blank" className="file-card">
+    <Link href={`/documents/${file.$id}`} target="_blank" className="file-card">
       {/* Top section containing the thumbnail and actions */}
       <div className="flex justify-between">
         {/* Thumbnail for file preview based on file type and extension */}
