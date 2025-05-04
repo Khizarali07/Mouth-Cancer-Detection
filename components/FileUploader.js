@@ -119,10 +119,7 @@ const FileUploader = ({ ownerId, accountId, className }) => {
 
   return (
     <div {...getRootProps()} className="cursor-pointer">
-      <input
-        {...getInputProps()}
-        accept=".jpg" // Restrict to .dcm files
-      />
+      <input {...getInputProps()} />
       <Button type="button" className={cn("uploader-button", className)}>
         <Image
           src="/assets/icons/upload.svg"
@@ -130,7 +127,7 @@ const FileUploader = ({ ownerId, accountId, className }) => {
           width={24}
           height={24}
         />{" "}
-        <p>Upload Your MRI Scan Here</p>
+        <p>Upload Here</p>
       </Button>
       {files.length > 0 && (
         <ul className="uploader-preview-list">

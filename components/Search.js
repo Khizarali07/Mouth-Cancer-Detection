@@ -46,13 +46,7 @@ const Search = () => {
     setOpen(false);
     setResults([]);
 
-    router.push(
-      `/${
-        file.type === "video" || file.type === "audio"
-          ? "media"
-          : file.type + "s"
-      }?query=${query}`
-    );
+    router.push(`/documents?query=${query}`);
   };
 
   return (

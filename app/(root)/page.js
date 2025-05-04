@@ -8,7 +8,7 @@ import Thumbnail from "@/components/Thumbnail";
 import { Separator } from "@/components/ui/separator";
 import { getFiles, getTotalSpaceUsed } from "@/lib/actions/fileActions";
 import { convertFileSize, getUsageSummary } from "@/lib/utils";
-
+import FileUploader from "@/components/FileUploader";
 const Dashboard = async () => {
   // Parallel requests
   const [files, totalSpace] = await Promise.all([
@@ -22,6 +22,25 @@ const Dashboard = async () => {
   return (
     <div className="dashboard-container">
       <section>
+        <section className="w-full mb-6">
+          <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 shadow-md dark:bg-dark-600">
+            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2 text-center">
+              Upload your Image
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center max-w-md">
+              Choose and upload your image here. We’ll analyze and store it
+              securely for cancer detection.
+            </p>
+
+            {/* Centering wrapper */}
+            <div className="max-w-sm w-full flex justify-center items-center">
+              <FileUploader />
+            </div>
+          </div>
+        </section>
+
+        <section></section>
+
         <Chart used={totalSpace.used} />
 
         {/* Uploaded file type summaries */}
@@ -60,12 +79,12 @@ const Dashboard = async () => {
 
       {/* Recent files uploaded */}
       <section className="dashboard-recent-files">
-        <h2 className="h3 xl:h2 text-light-100">Recent MRI scans uploaded</h2>
+        <h2 className="h3 xl:h2 text-light-100">Recent Images uploaded</h2>
         {files.documents.length > 0 ? (
           <ul className="mt-5 flex flex-col gap-5">
             {files.documents.map((file) => (
               <Link
-                href={file.url}
+                href={`/documents/${file.$id}`}
                 target="_blank"
                 className="flex items-center gap-3"
                 key={file.$id}
