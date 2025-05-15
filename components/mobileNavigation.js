@@ -73,6 +73,7 @@ const MobileNavigation = ({
                       "mobile-nav-item",
                       pathname === url && "shad-active"
                     )}
+                    onClick={() => setOpen(false)}
                   >
                     <Image
                       src={icon}

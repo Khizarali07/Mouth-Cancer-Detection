@@ -65,40 +65,41 @@ const FileUploader = ({ ownerId, accountId, className }) => {
         formData.append("file", file);
 
         try {
-          const response = await fetch("/api/predict", {
-            method: "POST",
-            body: formData,
+          // const response = await fetch("/api/predict", {
+          //   method: "POST",
+          //   body: formData,
+          // });
+
+          // const data = await response.json();
+
+          // if (response.ok) {
+          //   const prediction = `Prediction: ${data.prediction}, Confidence: ${data.confidence}`;
+          //   setResult(prediction); // Update Result with the prediction
+
+          //   toast({
+          //     description: prediction,
+          //     className: "success-toast",
+          //   });
+
+          // Only upload the file if prediction is successful
+          return uploadFile({
+            file,
+            ownerId,
+            accountId,
+            path,
+            Result: "Prediction",
+            // Result: prediction,
+          }).then((uploadedFile) => {
+            if (uploadedFile) {
+              setFiles((prevFiles) =>
+                prevFiles.filter((f) => f.name !== file.name)
+              );
+              redirect(`/documents/${uploadedFile.$id}`);
+            }
           });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            const prediction = `Prediction: ${data.prediction}, Confidence: ${data.confidence}`;
-            setResult(prediction); // Update Result with the prediction
-
-            toast({
-              description: prediction,
-              className: "success-toast",
-            });
-
-            // Only upload the file if prediction is successful
-            return uploadFile({
-              file,
-              ownerId,
-              accountId,
-              path,
-              Result: prediction,
-            }).then((uploadedFile) => {
-              if (uploadedFile) {
-                setFiles((prevFiles) =>
-                  prevFiles.filter((f) => f.name !== file.name)
-                );
-                redirect(`/documents/${uploadedFile.$id}`);
-              }
-            });
-          } else {
-            alert("Prediction failed: " + data.error);
-          }
+          // } else {
+          //   alert("Prediction failed: " + data.error);
+          // }
         } catch (error) {
           console.error("Error in prediction:", error);
           alert("Error occurred while making prediction.");
