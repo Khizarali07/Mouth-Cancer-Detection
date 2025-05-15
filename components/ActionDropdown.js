@@ -25,10 +25,13 @@ import {
   deleteFile,
   renameFile,
   updateFileUsers,
+  getFileById,
 } from "@/lib/actions/fileActions";
 import { usePathname } from "next/navigation";
 import { FileDetails, ShareInput } from "@/components/ActionsModalContent";
 import { actionsDropdownItems } from "@/constants";
+import jsPDF from "jspdf";
+import { toast } from "sonner";
 
 const ActionDropdown = ({ file }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,6 +81,69 @@ const ActionDropdown = ({ file }) => {
 
     if (success) setEmails(updatedEmails);
     closeAllModals();
+  };
+
+  const generatePDF = async () => {
+    try {
+      setIsLoading(true);
+      const fileData = await getFileById(file.$id);
+
+      if (fileData.error) {
+        toast.error("Failed to fetch file details");
+        return;
+      }
+
+      // Create PDF
+      const doc = new jsPDF();
+
+      // Helper function to safely add text
+      const addText = (text, x, y, fontSize = 12) => {
+        if (text === undefined || text === null) return;
+        doc.setFontSize(fontSize);
+        doc.text(String(text), x, y);
+      };
+
+      // Add title
+      addText("Cancer Prediction Result", 20, 20, 20);
+
+      // Add file information
+      addText(`File Name: ${fileData.name || "N/A"}`, 20, 40);
+      addText(
+        `File Size: ${fileData.size ? `${fileData.size} bytes` : "N/A"}`,
+        20,
+        50
+      );
+      addText(`File Type: ${fileData.type || "N/A"}`, 20, 60);
+
+      // Add prediction result
+      addText("Prediction Result", 20, 80, 16);
+      if (fileData.Result) {
+        const [prediction, confidence] = fileData.Result.split(",");
+        addText(prediction || "N/A", 20, 90);
+
+        // Add confidence level
+        addText("Confidence Level", 20, 110, 16);
+        addText(confidence || "N/A", 20, 120);
+      }
+
+      // Add owner information
+      addText("Owner Information", 20, 140, 16);
+      if (fileData.owner) {
+        addText(`Name: ${fileData.owner.fullName || "N/A"}`, 20, 150);
+        addText(`Email: ${fileData.owner.email || "N/A"}`, 20, 160);
+      }
+
+      // Add timestamp
+      addText(`Generated on: ${new Date().toLocaleString()}`, 20, 280, 10);
+
+      // Save the PDF
+      doc.save(`${fileData.name || "document"}-details.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderDialogContent = () => {
@@ -159,7 +225,9 @@ const ActionDropdown = ({ file }) => {
               onClick={() => {
                 setAction(actionItem);
 
-                if (
+                if (actionItem.value === "download") {
+                  generatePDF();
+                } else if (
                   ["rename", "share", "delete", "details"].includes(
                     actionItem.value
                   )
@@ -168,31 +236,15 @@ const ActionDropdown = ({ file }) => {
                 }
               }}
             >
-              {actionItem.value === "download" ? (
-                <Link
-                  href={constructDownloadUrl(file.bucketFileId)}
-                  download={file.name}
-                  className="flex items-center gap-2"
-                >
-                  <Image
-                    src={actionItem.icon}
-                    alt={actionItem.label}
-                    width={30}
-                    height={30}
-                  />
-                  {actionItem.label}
-                </Link>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={actionItem.icon}
-                    alt={actionItem.label}
-                    width={30}
-                    height={30}
-                  />
-                  {actionItem.label}
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                <Image
+                  src={actionItem.icon}
+                  alt={actionItem.label}
+                  width={30}
+                  height={30}
+                />
+                {actionItem.label}
+              </div>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
