@@ -136,7 +136,7 @@ function Settings({ currentUser }) {
         <button
           onClick={handleUpdate}
           disabled={loading}
-          className="bg-[#4A90E2] text-white p-4 rounded-full"
+          className="bg-brand text-white p-4 rounded-full"
         >
           {loading ? "Updating..." : "Update Account"}
         </button>

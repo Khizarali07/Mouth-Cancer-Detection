@@ -39,7 +39,7 @@ const OtpModal = ({ accountId, email }) => {
 
       console.log({ sessionId });
 
-      if (sessionId) router.push("/");
+      if (sessionId) router.push("/dashboard");
     } catch (error) {
       console.log("Failed to verify OTP", error);
     }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getCurrentUser } from "@/lib/actions/userActions";
 
 import ActionDropdown from "@/components/ActionDropdown";
 import { Chart } from "@/components/Chart";
@@ -8,13 +9,20 @@ import Thumbnail from "@/components/Thumbnail";
 import { Separator } from "@/components/ui/separator";
 import { getFiles, getTotalSpaceUsed } from "@/lib/actions/fileActions";
 import { convertFileSize, getUsageSummary } from "@/lib/utils";
-import FileUploader from "@/components/FileUploader";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+// import FileUploader from "@/components/FileUploader";
+
 const Dashboard = async () => {
   // Parallel requests
   const [files, totalSpace] = await Promise.all([
     getFiles({ types: [], limit: 10 }),
     getTotalSpaceUsed(),
   ]);
+
+  const CurrentUser = await getCurrentUser();
 
   // Get usage summary
   const usageSummary = getUsageSummary(totalSpace);
@@ -24,17 +32,94 @@ const Dashboard = async () => {
       <section>
         <section className="w-full mb-6">
           <div className="flex flex-col items-center justify-center bg-white rounded-2xl p-6 shadow-md dark:bg-dark-600">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2 text-center">
-              Upload your Image
+            <h2 className="text-2xl md:text-3xl font-bold text-brand-800 dark:text-white mb-4 text-center">
+              Start Your Mouth Cancer Screening
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center max-w-md">
-              Choose and upload your image here. We’ll analyze and store it
-              securely for cancer detection.
-            </p>
+            <div className="space-y-4 text-center max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-300 mb-6">
+                Follow our simple 3-step process for early detection of mouth
+                cancer:
+              </p>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-brand-800"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-gray-700 dark:text-gray-200">
+                    Upload a clear image of your mouth for initial screening
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full bg-accent-100 flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-accent-800"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-gray-700 dark:text-gray-200">
+                    Upload a biopsy image for for detailed analysis
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full bg-success-100 flex items-center justify-center">
+                    <svg
+                      className="w-5 h-5 text-success-800"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </span>
+                  <span className="text-gray-700 dark:text-gray-200">
+                    Complete a medical questionnaire to assess your risk profile
+                  </span>
+                </li>
+              </ul>
+            </div>
 
             {/* Centering wrapper */}
-            <div className="max-w-sm w-full flex justify-center items-center">
-              <FileUploader />
+            <div className="max-w-sm w-full mt-6 flex justify-center items-center">
+              <Link href="/dashboard/test" className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
+                  <Image
+                    src="/assets/icons/upload.svg"
+                    alt="upload"
+                    width={24}
+                    height={24}
+                  />
+                  <span className="font-semibold">Start Screening</span>
+                </Button>
+              </Link>
             </div>
           </div>
         </section>

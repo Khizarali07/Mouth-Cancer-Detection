@@ -14,7 +14,7 @@ const AdminLayout = async ({ children }) => {
   if (!currentUser) return redirect("/login");
 
   // Redirect to root if user is not an admin
-  if (!currentUser.isAdmin) return redirect("/");
+  if (!currentUser.isAdmin) return redirect("/dashboard");
 
   return (
     <main className="flex h-screen">

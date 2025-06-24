@@ -14,7 +14,6 @@ import { navItems } from "@/constants";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import FileUploader from "@/components/FileUploader";
 import { signOutUser } from "@/lib/actions/userActions";
 
 const MobileNavigation = ({
@@ -95,7 +94,20 @@ const MobileNavigation = ({
           <Separator className="my-5 bg-light-200/20" />
 
           <div className="flex flex-col justify-between gap-5 pb-5">
-            <FileUploader ownerId={ownerId} accountId={accountId} />
+            <Link href="/dashboard/test" className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+              >
+                <Image
+                  src="/assets/icons/upload.svg"
+                  alt="upload"
+                  width={24}
+                  height={24}
+                />
+                <span className="font-semibold">Start Screening</span>
+              </Button>
+            </Link>
             <Button
               type="submit"
               className="mobile-sign-out-button"

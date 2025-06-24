@@ -13,7 +13,7 @@ export const metadata = {
     "Mouth Vision - Empowering early detection of mouth cancer using advanced AI technology.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} font-poppins antialiased`}>

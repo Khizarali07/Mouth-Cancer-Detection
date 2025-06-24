@@ -2,22 +2,22 @@ export const navItems = [
   {
     name: "Dashboard",
     icon: "/assets/icons/dashboard.svg",
-    url: "/",
+    url: "/dashboard",
   },
   {
     name: "Documents",
     icon: "/assets/icons/documents.svg",
-    url: "/documents",
+    url: "/dashboard/documents",
   },
   {
     name: "Settings",
     icon: "/assets/icons/setting.svg",
-    url: "/settings",
+    url: "/dashboard/settings",
   },
   {
     name: "Contact",
     icon: "/assets/icons/phone.svg",
-    url: "/contact",
+    url: "/dashboard/contact",
   },
 ];
 

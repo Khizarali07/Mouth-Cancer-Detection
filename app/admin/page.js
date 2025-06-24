@@ -2,7 +2,7 @@ import React from "react";
 import { getCurrentUser } from "@/lib/actions/userActions";
 import { getAdminStats } from "@/lib/actions/adminActions";
 import { redirect } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceStrict } from "date-fns";
 import { Users, FileText, HardDrive, Clock } from "lucide-react";
 
 const formatBytes = (bytes) => {
@@ -27,43 +27,45 @@ const StatCard = ({ title, value, icon: Icon, color }) => (
   </div>
 );
 
-const RecentActivityCard = ({ title, items, type }) => (
-  <div className="bg-white rounded-lg shadow p-6">
-    <h3 className="text-lg font-semibold mb-4">{title}</h3>
-    <div className="space-y-4">
-      {items.map((item) => (
-        <div key={item.$id} className="flex items-center justify-between">
-          <div className="flex items-center space-x-3 flex-1">
-            {type === "user" ? (
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                <Users className="w-5 h-5 text-gray-600" />
+const RecentActivityCard = ({ title, items, type }) => {
+  return (
+    <div className="bg-white rounded-lg shadow p-6">
+      <h3 className="text-lg font-semibold mb-4">{title}</h3>
+      <div className="space-y-4">
+        {items.map((item) => (
+          <div key={item.$id} className="flex items-center justify-between">
+            <div className="flex items-center space-x-3 flex-1">
+              {type === "user" ? (
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <Users className="w-5 h-5 text-gray-600" />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-5 h-5 text-gray-600" />
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="font-medium truncate">
+                  {type === "user"
+                    ? item.fullName.slice(0, 15)
+                    : item.name.slice(0, 15)}
+                </p>
               </div>
-            ) : (
-              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                <FileText className="w-5 h-5 text-gray-600" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <p className="font-medium truncate">
-                {type === "user"
-                  ? item.fullName.slice(0, 15)
-                  : item.name.slice(0, 15)}
-              </p>
+            </div>
+            <div className="flex items-center text-sm text-gray-500 ml-4 flex-shrink-0 w-32 justify-end">
+              <Clock className="w-4 h-4 mr-1 flex-shrink-0" />
+              <span className="truncate">
+                {formatDistanceStrict(new Date(item.$createdAt), new Date(), {
+                  addSuffix: true,
+                })}
+              </span>
             </div>
           </div>
-          <div className="flex items-center text-sm text-gray-500 ml-4 flex-shrink-0 w-32 justify-end">
-            <Clock className="w-4 h-4 mr-1 flex-shrink-0" />
-            <span className="truncate">
-              {formatDistanceToNow(new Date(item.$createdAt), {
-                addSuffix: true,
-              })}
-            </span>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const AdminPage = async () => {
   const currentUser = await getCurrentUser();
@@ -72,7 +74,7 @@ const AdminPage = async () => {
   if (!currentUser) return redirect("/login");
 
   // Redirect to root if user is not an admin
-  if (!currentUser.isAdmin) return redirect("/");
+  if (!currentUser.isAdmin) return redirect("/dashboard");
 
   const stats = await getAdminStats();
 
@@ -94,7 +96,7 @@ const AdminPage = async () => {
           color="bg-blue-500"
         />
         <StatCard
-          title="Total Files"
+          title="Total Tests"
           value={stats.totalFiles}
           icon={FileText}
           color="bg-green-500"
@@ -120,7 +122,7 @@ const AdminPage = async () => {
           type="user"
         />
         <RecentActivityCard
-          title="Recent Files"
+          title="Recent Tests"
           items={stats.recentFiles}
           type="file"
         />
