@@ -192,7 +192,7 @@
 
   /* Sidebar & MobileNavigation */
   .nav-icon {
-    @apply w-6 filter invert opacity-50 !important;
+    @apply w-6 filter invert-0 opacity-100 !important;
   }
   .nav-icon-active {
     @apply invert-0 opacity-100 !important;
@@ -390,6 +390,10 @@
   }
   .mobile-sign-out-button {
     @apply h5 flex h-[52px] w-full items-center gap-4 rounded-full bg-brand/10 px-6 text-brand shadow-none transition-all hover:bg-brand/20 !important;
+  }
+
+  .mobile-test-button {
+    @apply h5 flex h-[52px] w-full items-center gap-4 rounded-full bg-brand-100 px-6 text-light-400 shadow-none transition-all hover:bg-brand-200 !important;
   }
 
   /* OTP Modal */

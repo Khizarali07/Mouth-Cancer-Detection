@@ -10,6 +10,7 @@ const config = {
       colors: {
         brand: {
           100: "#4A90E2",
+          200: "#357ABD",
           DEFAULT: "#4A90E2",
         },
         red: "#FF7474",

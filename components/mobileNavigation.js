@@ -28,13 +28,17 @@ const MobileNavigation = ({
 
   return (
     <header className="mobile-header">
-      <Image
-        src="/assets/icons/logo-full-brand.png"
-        alt="logo"
-        width={150}
-        height={70}
-        className="h-auto"
-      />
+      <div className="header-user">
+        <Link href="/">
+          <Image
+            src="/assets/icons/logo-full-brand.png"
+            alt="logo"
+            width={150}
+            height={70}
+            className="h-auto"
+          />
+        </Link>
+      </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
@@ -97,7 +101,8 @@ const MobileNavigation = ({
             <Link href="/dashboard/test" className="flex items-center gap-2">
               <Button
                 variant="outline"
-                className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="mobile-test-button"
+                // className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
               >
                 <Image
                   src="/assets/icons/upload.svg"

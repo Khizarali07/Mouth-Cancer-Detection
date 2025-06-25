@@ -13,7 +13,7 @@ const Header = ({ userId, accountId }) => {
         <Link href="/dashboard/test" className="flex items-center gap-2">
           <Button
             variant="outline"
-            className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            className="uploader-button text-light-400 hover:bg-brand-500 hover:shadow-xl hover:scale-105 transition-all duration-300"
           >
             <Image
               src="/assets/icons/upload.svg"

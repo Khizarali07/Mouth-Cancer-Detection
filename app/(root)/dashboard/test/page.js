@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -14,78 +13,769 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import FileUploader from "@/components/FileUploader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export default function TestPage() {
   const [currentTest, setCurrentTest] = useState(1);
-  const [testResults, setTestResults] = useState({
-    test1: null,
-    test2: null,
-    test3: null,
+  const [formData, setFormData] = useState({
+    country: "",
+    gender: "",
+    tobaccoUse: "",
+    alcoholUse: "",
+    symptoms: "",
+    duration: "",
   });
-  const [uploadedImages, setUploadedImages] = useState({
-    test1: null,
-    test2: null,
-  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleBack = () => {
-    if (currentTest > 1) {
-      setCurrentTest(currentTest - 1);
-    }
+    setCurrentTest((prev) => Math.max(1, prev - 1));
   };
 
-  const handleImageUpload = (testNumber, file) => {
-    setUploadedImages((prev) => ({
-      ...prev,
-      [`test${testNumber}`]: file,
-    }));
+  const handleNext = () => {
+    setCurrentTest((prev) => Math.min(3, prev + 1));
   };
-
-  const handleImageChange = (testNumber) => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = (e) => {
-      if (e.target.files && e.target.files[0]) {
-        handleImageUpload(testNumber, e.target.files[0]);
-      }
-    };
-    input.click();
-  };
-
-  const handleTestComplete = async (testNumber) => {
-    try {
-      // Simulate test completion with a delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Update test results
-      const newResults = { ...testResults };
-      newResults[`test${testNumber}`] = true;
-      setTestResults(newResults);
-
-      // Move to next test
-      if (testNumber < 3) {
-        setCurrentTest(testNumber + 1);
-      }
-    } catch (error) {
-      console.error("Test failed:", error);
-    }
-  };
-
-  const isComplete = Object.values(testResults).every((result) => result);
 
   const renderTestContent = () => {
-    // Calculate progress width
     const progressWidth = `${(currentTest / 3) * 100}%`;
 
     return (
-      <div className="space-y-8">
-        {/* Progress Bar */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600 dark:text-gray-300">
-              Step {currentTest} of 3
-            </span>
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1">
+          <div className="container mx-auto px-4 py-8">
+            <div className="space-y-8">
+              {/* Progress Bar */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm font-medium text-gray-600">
+                    Step {currentTest} of 3
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="w-48 h-1 bg-gray-200 rounded-full">
+                      <div
+                        className="h-1 bg-brand rounded-full transition-all duration-300"
+                        style={{ width: progressWidth }}
+                      />
+                    </div>
+                    <span className="text-sm font-medium text-gray-600">
+                      {Math.round((currentTest / 3) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Test Content */}
+              <div className="space-y-8">
+                {currentTest === 1 && (
+                  <div className="space-y-6">
+                    <h2 className="text-4xl font-bold text-brand-800 mb-4">
+                      Mouth Image Test
+                    </h2>
+                    <div className="bg-light-300/20 rounded-xl p-8">
+                      <div className="space-y-4">
+                        <p className="text-lg text-gray-700">
+                          Please upload a clear image of your mouth for initial
+                          assessment.
+                        </p>
+                        <ul className="list-disc list-inside text-gray-600">
+                          <li>
+                            Ensure the image shows your entire mouth clearly
+                          </li>
+                          <li>Make sure the image is well-lit and in focus</li>
+                          <li>Avoid any obstructions or shadows</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-4 mt-8">
+                      <Button
+                        onClick={handleNext}
+                        className="uploader-button w-full sm:w-auto"
+                      >
+                        <Image
+                          src="/assets/icons/upload.svg"
+                          alt="upload"
+                          width={24}
+                          height={24}
+                          className="mr-2"
+                        />
+                        Upload Mouth Image
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentTest === 2 && (
+                  <div className="space-y-6">
+                    <h2 className="text-4xl font-bold text-brand-800 mb-4">
+                      Biopsy Image Test
+                    </h2>
+                    <div className="bg-light-300/20 rounded-xl p-8">
+                      <div className="space-y-4">
+                        <p className="text-lg text-gray-700">
+                          Please upload a biopsy image for analysis.
+                        </p>
+                        <ul className="list-disc list-inside text-gray-600">
+                          <li>Ensure the biopsy sample is clearly visible</li>
+                          <li>Use a microscope for the image</li>
+                          <li>Include a scale reference</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-4 mt-8">
+                      <Button
+                        onClick={handleBack}
+                        variant="outline"
+                        className="w-full mt-auto mb-auto sm:w-auto"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        onClick={handleNext}
+                        className="uploader-button w-full sm:w-auto"
+                      >
+                        <Image
+                          src="/assets/icons/upload.svg"
+                          alt="upload"
+                          width={24}
+                          height={24}
+                          className="mr-2"
+                        />
+                        Upload Biopsy Image
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentTest === 3 && (
+                  <div className="space-y-6">
+                    <h2 className="text-4xl font-bold text-brand-800 mb-4">
+                      Medical Information
+                    </h2>
+                    <div className="bg-light-300/20 rounded-xl p-8">
+                      <p className="text-lg text-gray-700 mb-4">
+                        Please fill out your medical information to help with
+                        the analysis.
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Categorical Information */}
+                        <div>
+                          <h3 className="text-xl font-semibold mb-4">
+                            Categorical Information
+                          </h3>
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="country">Country</Label>
+                              <Select
+                                value={formData.country}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    country: value,
+                                  }))
+                                }
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select country" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="pakistan">
+                                    Pakistan
+                                  </SelectItem>
+                                  <SelectItem value="india">India</SelectItem>
+                                  <SelectItem value="bangladesh">
+                                    Bangladesh
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="gender">Gender</Label>
+                              <Select
+                                value={formData.gender}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    gender: value,
+                                  }))
+                                }
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select gender" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="male">Male</SelectItem>
+                                  <SelectItem value="female">Female</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="tobacco">Tobacco Use</Label>
+                              <RadioGroup
+                                value={formData.tobaccoUse}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    tobaccoUse: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="tobacco-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="tobacco-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="alcohol">
+                                Alcohol Consumption
+                              </Label>
+                              <RadioGroup
+                                value={formData.alcoholUse}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    alcoholUse: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="alcohol-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="alcohol-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="hpv">HPV Infection</Label>
+                              <RadioGroup
+                                value={formData.hpvInfection}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    hpvInfection: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="yes" id="hpv-yes" />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="hpv-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="betel">Betel Quid Use</Label>
+                              <RadioGroup
+                                value={formData.betelQuidUse}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    betelQuidUse: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="betel-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="betel-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="sun">Chronic Sun Exposure</Label>
+                              <RadioGroup
+                                value={formData.chronicSunExposure}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    chronicSunExposure: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="yes" id="sun-yes" />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="sun-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="hygiene">Poor Oral Hygiene</Label>
+                              <RadioGroup
+                                value={formData.poorOralHygiene}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    poorOralHygiene: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="hygiene-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="hygiene-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="diet">
+                                Diet (Fruits & Vegetables Intake)
+                              </Label>
+                              <RadioGroup
+                                value={formData.dietIntake}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    dietIntake: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="yes" id="diet-yes" />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="diet-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="family">
+                                Family History of Cancer
+                              </Label>
+                              <RadioGroup
+                                value={formData.familyHistory}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    familyHistory: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="family-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="family-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="immune">
+                                Compromised Immune System
+                              </Label>
+                              <RadioGroup
+                                value={formData.compromisedImmuneSystem}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    compromisedImmuneSystem: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="immune-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem value="no" id="immune-no" />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="lesions">Oral Lesions</Label>
+                              <RadioGroup
+                                value={formData.oralLesions}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    oralLesions: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="lesions-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="lesions-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="bleeding">
+                                Unexplained Bleeding
+                              </Label>
+                              <RadioGroup
+                                value={formData.unexplainedBleeding}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    unexplainedBleeding: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="bleeding-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="bleeding-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="swallowing">
+                                Difficulty Swallowing
+                              </Label>
+                              <RadioGroup
+                                value={formData.difficultySwallowing}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    difficultySwallowing: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="swallowing-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="swallowing-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="patches">
+                                White or Red Patches in Mouth
+                              </Label>
+                              <RadioGroup
+                                value={formData.whitePatches}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    whitePatches: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="patches-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="patches-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="treatment">Treatment Type</Label>
+                              <Select
+                                value={formData.treatmentType}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    treatmentType: value,
+                                  }))
+                                }
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select treatment type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="surgery">
+                                    Surgery
+                                  </SelectItem>
+                                  <SelectItem value="radiation">
+                                    Radiation Therapy
+                                  </SelectItem>
+                                  <SelectItem value="chemo">
+                                    Chemotherapy
+                                  </SelectItem>
+                                  <SelectItem value="targeted">
+                                    Targeted Therapy
+                                  </SelectItem>
+                                  <SelectItem value="immunotherapy">
+                                    Immunotherapy
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div>
+                              <Label htmlFor="diagnosis">Early Diagnosis</Label>
+                              <RadioGroup
+                                value={formData.earlyDiagnosis}
+                                onValueChange={(value) =>
+                                  setFormData((prev) => ({
+                                    ...prev,
+                                    earlyDiagnosis: value,
+                                  }))
+                                }
+                              >
+                                <div className="space-y-2">
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="yes"
+                                      id="diagnosis-yes"
+                                    />
+                                    <span>Yes</span>
+                                  </label>
+                                  <label className="flex items-center gap-2">
+                                    <RadioGroupItem
+                                      value="no"
+                                      id="diagnosis-no"
+                                    />
+                                    <span>No</span>
+                                  </label>
+                                </div>
+                              </RadioGroup>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Numerical Information */}
+                        <div>
+                          <h3 className="text-xl font-semibold mb-4">
+                            Numerical Information
+                          </h3>
+                          <div className="space-y-4">
+                            <div>
+                              <Label htmlFor="age">Age</Label>
+                              <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                value={formData.age}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter age"
+                              />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="tumorSize">Tumor Size (cm)</Label>
+                              <input
+                                type="number"
+                                id="tumorSize"
+                                name="tumorSize"
+                                value={formData.tumorSize}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter tumor size"
+                              />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="survivalRate">
+                                Survival Rate (5-Year, %)
+                              </Label>
+                              <input
+                                type="number"
+                                id="survivalRate"
+                                name="survivalRate"
+                                value={formData.survivalRate}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter survival rate"
+                              />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="cancerStage">Cancer Stage</Label>
+                              <input
+                                type="number"
+                                id="cancerStage"
+                                name="cancerStage"
+                                value={formData.cancerStage}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter cancer stage"
+                              />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="treatmentCost">
+                                Cost of Treatment (USD)
+                              </Label>
+                              <input
+                                type="number"
+                                id="treatmentCost"
+                                name="treatmentCost"
+                                value={formData.treatmentCost}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter treatment cost"
+                              />
+                            </div>
+
+                            <div>
+                              <Label htmlFor="economicBurden">
+                                Economic Burden (Lost Workdays per Year)
+                              </Label>
+                              <input
+                                type="number"
+                                id="economicBurden"
+                                name="economicBurden"
+                                value={formData.economicBurden}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
+                                placeholder="Enter workdays lost"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-4 mt-8">
+                      <Button
+                        onClick={handleBack}
+                        variant="outline"
+                        className="w-full sm:w-auto"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          // Submit form data
+                          console.log("Form submitted:", formData);
+                        }}
+                        className="bg-brand text-white hover:bg-brand-500 px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        Complete Test
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <span className="text-lg font-semibold">
+                Step {currentTest} of 3
+              </span>
+            </div>
             <div className="w-48 h-1 bg-light-300 rounded-full">
               <div
                 className="h-1 bg-brand rounded-full"
@@ -93,491 +783,6 @@ export default function TestPage() {
               />
             </div>
           </div>
-        </div>
-
-        {/* Test Content */}
-        <div className="space-y-8">
-          {currentTest === 1 && (
-            <div>
-              <h2 className="text-3xl font-bold text-brand-800 mb-4">
-                Test 1: Mouth Image Test
-              </h2>
-              <div className="p-6 bg-light-300/20 rounded-xl">
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Please upload a clear image of your mouth for initial
-                  assessment. Ensure the image:
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
-                  <li>Shows your entire mouth clearly</li>
-                  <li>Is well-lit and in focus</li>
-                  <li>Has no obstructions or shadows</li>
-                </ul>
-              </div>
-              <div className="flex justify-center gap-4 mt-8">
-                <Button
-                  onClick={() => handleImageChange(1)}
-                  variant="outline"
-                  className="px-6 py-3"
-                >
-                  Change Image
-                </Button>
-                <Button
-                  onClick={() => handleTestComplete(1)}
-                  className="bg-brand hover:bg-brand-500 text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-                >
-                  <Image
-                    src="/assets/icons/upload.svg"
-                    alt="upload"
-                    width={24}
-                    height={24}
-                  />
-                  Upload Mouth Image
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {currentTest === 2 && (
-            <div>
-              <h2 className="text-3xl font-bold text-brand-800 mb-4">
-                Test 2: Biopsy Image Test
-              </h2>
-              <div className="p-6 bg-light-300/20 rounded-xl">
-                <p className="text-gray-600 dark:text-gray-300 mb-4">
-                  Please upload a biopsy image for analysis. This image should:
-                </p>
-                <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-300">
-                  <li>Show the biopsy sample clearly</li>
-                  <li>Be taken under a microscope</li>
-                  <li>Include a scale reference</li>
-                </ul>
-              </div>
-              <div className="flex justify-center gap-4 mt-8">
-                <Button
-                  onClick={handleBack}
-                  variant="outline"
-                  className="px-6 py-3"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={() => handleImageChange(2)}
-                  variant="outline"
-                  className="px-6 py-3"
-                >
-                  Change Image
-                </Button>
-                <Button
-                  onClick={() => handleTestComplete(2)}
-                  className="bg-brand hover:bg-brand-500 text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-                >
-                  <Image
-                    src="/assets/icons/upload.svg"
-                    alt="upload"
-                    width={24}
-                    height={24}
-                  />
-                  Upload Biopsy Image
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {currentTest === 3 && (
-            <div>
-              <h2 className="text-3xl font-bold text-brand-800 mb-4">
-                Test 3: Medical Data Entry
-              </h2>
-              <div className="p-6 bg-light-300/20 rounded-xl mb-8">
-                <p className="text-gray-600 dark:text-gray-300">
-                  Please fill out your medical information to help with the
-                  analysis.
-                </p>
-              </div>
-
-              {/* Categorical Data */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold">
-                  Categorical Information
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="country">Country</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pakistan">Pakistan</SelectItem>
-                        <SelectItem value="india">India</SelectItem>
-                        <SelectItem value="bangladesh">Bangladesh</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="gender">Gender</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select gender" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="tobacco">Tobacco Use</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="alcohol">Alcohol Consumption</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="hpv">HPV Infection</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="betel">Betel Quid Use</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="sun">Chronic Sun Exposure</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="hygiene">Poor Oral Hygiene</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="diet">
-                      Diet (Fruits & Vegetables Intake)
-                    </Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="family">Family History of Cancer</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="immune">Compromised Immune System</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="lesions">Oral Lesions</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="bleeding">Unexplained Bleeding</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="swallowing">Difficulty Swallowing</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="patches">
-                      White or Red Patches in Mouth
-                    </Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="treatment">Treatment Type</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select treatment type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="surgery">Surgery</SelectItem>
-                        <SelectItem value="radiation">
-                          Radiation Therapy
-                        </SelectItem>
-                        <SelectItem value="chemo">Chemotherapy</SelectItem>
-                        <SelectItem value="targeted">
-                          Targeted Therapy
-                        </SelectItem>
-                        <SelectItem value="immunotherapy">
-                          Immunotherapy
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="diagnosis">Early Diagnosis</Label>
-                    <RadioGroup>
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <RadioGroupItem value="yes" />
-                          <span className="ml-2">Yes</span>
-                        </div>
-                        <div>
-                          <RadioGroupItem value="no" />
-                          <span className="ml-2">No</span>
-                        </div>
-                      </div>
-                    </RadioGroup>
-                  </div>
-                </div>
-              </div>
-
-              {/* Numerical Data */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold">Numerical Information</h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="age">Age</Label>
-                    <Input type="number" placeholder="Enter age" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="tumorSize">Tumor Size (cm)</Label>
-                    <Input type="number" placeholder="Enter tumor size" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="survivalRate">
-                      Survival Rate (5-Year, %)
-                    </Label>
-                    <Input type="number" placeholder="Enter survival rate" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="cancerStage">Cancer Stage</Label>
-                    <Input type="number" placeholder="Enter cancer stage" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="cost">Cost of Treatment (USD)</Label>
-                    <Input type="number" placeholder="Enter treatment cost" />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="burden">
-                      Economic Burden (Lost Workdays per Year)
-                    </Label>
-                    <Input type="number" placeholder="Enter workdays lost" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Navigation Buttons */}
-              <div className="flex justify-between mt-8">
-                <Button
-                  onClick={handleBack}
-                  variant="outline"
-                  className="px-6 py-3"
-                >
-                  Back
-                </Button>
-              </div>
-
-              <div className="flex justify-center mt-8">
-                <Button
-                  onClick={() => handleTestComplete(3)}
-                  className="bg-brand hover:bg-brand-500 text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Submit Medical Data
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {currentTest > 3 && (
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-brand-800 mb-4">
-                Screening Complete!
-              </h2>
-              <div className="p-6 bg-light-300/20 rounded-xl mb-8">
-                <p className="text-gray-600 dark:text-gray-300">
-                  Thank you for completing the screening process. Your results
-                  are being analyzed. You will receive a detailed report
-                  shortly.
-                </p>
-              </div>
-              <div className="flex justify-center">
-                <Link
-                  href="/dashboard"
-                  className="bg-brand text-white px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-                >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Return to Dashboard
-                </Link>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
