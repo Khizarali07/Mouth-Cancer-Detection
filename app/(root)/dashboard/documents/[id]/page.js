@@ -2,7 +2,7 @@ import { getFileById } from "@/lib/actions/fileActions";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
-async function page({ params }) {
+async function DocumentPage({ params }) {
   const { id } = params; // Get the dynamic parameter (id) from the URL
   const fileData = await getFileById(id); // Fetch file data by ID
 
@@ -107,4 +107,4 @@ async function page({ params }) {
   );
 }
 
-export default page;
+export default DocumentPage;

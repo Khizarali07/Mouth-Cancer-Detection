@@ -9,7 +9,11 @@ const Card = ({ file }) => {
 
   return (
     // A clickable card linking to the file's URL in a new tab
-    <Link href={`/documents/${file.$id}`} target="_blank" className="file-card">
+    <Link
+      href={`/dashboard/documents/${file.$id}`}
+      target="_blank"
+      className="file-card"
+    >
       {/* Top section containing the thumbnail and actions */}
       <div className="flex justify-between">
         {/* Thumbnail for file preview based on file type and extension */}

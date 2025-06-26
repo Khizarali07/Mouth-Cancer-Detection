@@ -169,7 +169,7 @@ const Dashboard = async () => {
           <ul className="mt-5 flex flex-col gap-5">
             {files.documents.map((file) => (
               <Link
-                href={`/documents/${file.$id}`}
+                href={`/dashboard/documents/${file.$id}`}
                 target="_blank"
                 className="flex items-center gap-3"
                 key={file.$id}
