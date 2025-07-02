@@ -15,7 +15,11 @@ const config = {
         },
         red: "#FF7474",
         error: "#b80000",
-        green: "#3DD9B3",
+        green: {
+          100: "#3DD9B3",
+          500: "#16a34a",
+          600: "#15803d",
+        },
         blue: "#56B8FF",
         pink: "#EEA8FD",
         orange: "#F9AB72",

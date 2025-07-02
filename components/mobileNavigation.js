@@ -84,7 +84,7 @@ const MobileNavigation = ({
                       width={24}
                       height={24}
                       className={cn(
-                        "nav-icon",
+                        "nav-icon-mob",
                         pathname === url && "nav-icon-active"
                       )}
                     />
