@@ -98,33 +98,35 @@ export default function TestPage({ user, fileData }) {
 
     const formData = new FormData();
     formData.append("file", file);
+    let response;
+    let data;
 
     try {
       // 🔥 Predict or skip directly to upload
-      const response = await fetch(
-        "http://localhost:5000/predict/mouth-image",
-        {
+      if (currentTest === 1) {
+        response = await fetch("http://localhost:5000/predict/mouth-image", {
           method: "POST",
           body: formData,
-        }
-      );
-      const data = await response.json();
-
-      console.log("this is a data :", fileData.$id);
+        });
+        data = await response.json();
+        setImageResult(data);
+      } else if (currentTest === 2) {
+        response = await fetch("http://localhost:5000/predict/biopsy-image", {
+          method: "POST",
+          body: formData,
+        });
+        data = await response.json();
+        setBiopsyResult(data);
+      }
 
       // Update
       const res = await updateData({
         fileId: fileData.$id,
         file,
         step: currentTest,
-        ownerId: user?.$id,
-        accountId: user?.accountId,
         path,
         Result: JSON.stringify(data), // replace with real prediction
       });
-      setImageResult(JSON.parse(res.Result));
-
-      console.log("This is the response :", res);
 
       toast({
         description: "Upload Successfully.",
@@ -330,6 +332,15 @@ export default function TestPage({ user, fileData }) {
                         </Button>
                       )}
                     </div>
+                    {biopsyResult && (
+                      <div>
+                        <p>Prediction: {biopsyResult.prediction}</p>
+                        {/* <p>
+                          Confidence:{" "}
+                          {(biopsyResult.confidence * 100).toFixed(2)}%
+                        </p> */}
+                      </div>
+                    )}
                   </div>
                 )}
 
