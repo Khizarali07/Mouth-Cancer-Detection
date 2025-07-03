@@ -1,18 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+
 import { useRouter } from "next/navigation";
 
 import { MAX_FILE_SIZE } from "@/constants";
@@ -20,32 +12,14 @@ import { getTotalSpaceUsed, uploadFile } from "@/lib/actions/fileActions";
 import { usePathname } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
 export default function TestPage({ user }) {
   const path = usePathname();
   const { toast } = useToast();
   const router = useRouter();
 
   const [currentTest, setCurrentTest] = useState(1);
-  const [formData, setFormData] = useState({
-    country: "",
-    gender: "",
-    tobaccoUse: "",
-    alcoholUse: "",
-    symptoms: "",
-    duration: "",
-  });
+
   const [files, setFiles] = useState([]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleBack = () => {
-    setCurrentTest((prev) => Math.max(1, prev - 1));
-  };
 
   const handleMouthUpload = async () => {
     if (files?.length === 0) {
@@ -124,10 +98,6 @@ export default function TestPage({ user }) {
         className: "error-toast",
       });
     }
-  };
-
-  const handleNext = () => {
-    setCurrentTest((prev) => Math.min(3, prev + 1));
   };
 
   const renderTestContent = () => {
