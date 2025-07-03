@@ -134,10 +134,10 @@ export default function TestPage({ user }) {
     const progressWidth = `${(currentTest / 3) * 100}%`;
 
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="w-screen flex flex-col items-start justify-center">
         <div className="flex-1">
           <div className="container mx-auto px-4 py-8">
-            <div className="space-y-8">
+            <div className="-space-y-6">
               {/* Progress Bar */}
 
               <div className="flex items-center justify-between mb-8">
@@ -181,9 +181,9 @@ export default function TestPage({ user }) {
                         </ul>
                       </div>
                     </div>
-                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className=" flex flex-col sm:flex-row items-center justify-between gap-6">
                       {/* Upload Section */}
-                      <div className="flex flex-col items-center gap-3 w-full sm:w-auto">
+                      <div className="flex flex-col items-start gap-10 w-full sm:w-auto">
                         {/* File Input */}
                         <input
                           id="mouth-upload"
@@ -200,7 +200,7 @@ export default function TestPage({ user }) {
                         {/* Upload Button */}
                         <Button
                           onClick={handleMouthUpload}
-                          className="w-full sm:w-auto flex items-center justify-center gap-2 border border-blue text-blue hover:bg-blue hover:text-white transition"
+                          className="w-auto  flex items-center justify-center gap-2 border border-blue text-blue hover:bg-blue hover:text-white transition"
                         >
                           <Image
                             src="/assets/icons/upload.svg"
@@ -223,7 +223,7 @@ export default function TestPage({ user }) {
                   </div>
                 )}
               </div>
-              <span className="text-lg font-semibold">
+              <span className="mt-20 text-lg font-semibold">
                 Step {currentTest} of 3
               </span>
             </div>

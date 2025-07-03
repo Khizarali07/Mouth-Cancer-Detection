@@ -147,10 +147,10 @@ export default function TestPage({ user, fileData }) {
     const progressWidth = `${(currentTest / 3) * 100}%`;
 
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="w-screen flex flex-col items-start justify-center">
         <div className="flex-1">
           <div className="container mx-auto px-4 py-8">
-            <div className="space-y-8">
+            <div className="space-y-6">
               {/* Progress Bar */}
 
               <div className="flex items-center justify-between mb-8">

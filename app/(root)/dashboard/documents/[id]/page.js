@@ -9,7 +9,11 @@ async function DocumentPage({ params }) {
   const fileData = await getFileById(id); // Fetch file data by ID
   const currentUser = await getCurrentUser();
 
-  return <TestPage user={currentUser} fileData={fileData} />;
+  return (
+    <div className="dashboard-container">
+      <TestPage user={currentUser} fileData={fileData} />
+    </div>
+  );
 }
 
 export default DocumentPage;
