@@ -183,7 +183,7 @@ export default function TestPage({ user }) {
                     </div>
                     <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                       {/* Upload Section */}
-                      <div className="flex flex-col md:flex-row justify-center items-center gap-3 w-full sm:w-auto">
+                      <div className="flex flex-col md:flex-row justify-center items-start gap-3 w-full sm:w-auto">
                         {/* File Input */}
                         <input
                           id="mouth-upload"

@@ -273,34 +273,62 @@ export default function TestPage({ user, fileData }) {
                         </ul>
                       </div>
                     </div>
-                    <div className="flex justify-center gap-4 mt-8">
+                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                      {/* Upload Section */}
                       <Button
                         onClick={handleBack}
-                        variant="outline"
-                        className="w-full mt-auto mb-auto sm:w-auto"
+                        // variant="outline"
+                        className="bg-brand text-white w-full sm:w-auto mt-4 sm:mt-0"
                       >
                         Back
                       </Button>
-                      <Button
-                        onClick={handleNext}
-                        className="uploader-button w-full sm:w-auto"
-                      >
-                        <Image
-                          src="/assets/icons/upload.svg"
-                          alt="upload"
-                          width={24}
-                          height={24}
-                          className="mr-2"
+                      <div className="flex flex-col md:flex-row justify-center items-center gap-3 w-full sm:w-auto">
+                        {/* File Input */}
+                        <input
+                          id="mouth-upload"
+                          type="file"
+                          accept="image/*"
+                          className=""
+                          onChange={(e) => {
+                            if (e.target.files.length > 0) {
+                              setFiles(Array.from(e.target.files));
+                            }
+                          }}
                         />
-                        Upload Biopsy Image
-                      </Button>
-                      <Button
-                        onClick={handleNext}
-                        variant="outline"
-                        className="w-full mt-auto mb-auto sm:w-auto"
-                      >
-                        Next
-                      </Button>
+
+                        {/* Upload Button */}
+                        <Button
+                          onClick={handleMouthUpload}
+                          className="w-full sm:w-auto gap-2 border border-blue text-blue hover:bg-blue hover:text-white transition"
+                        >
+                          <Image
+                            src="/assets/icons/upload.svg"
+                            alt="upload"
+                            width={20}
+                            height={20}
+                          />
+                          Upload Biopsy Image
+                        </Button>
+
+                        {/* File Preview */}
+                        {files.length > 0 && (
+                          <p className="text-sm text-gray-500 text-center truncate max-w-xs">
+                            Selected:{" "}
+                            <span className="font-medium">{files[0].name}</span>
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Next Button */}
+                      {biopsyResult && (
+                        <Button
+                          onClick={handleNext}
+                          // variant="outline"
+                          className="bg-brand text-white w-full sm:w-auto mt-4 sm:mt-0"
+                        >
+                          Next
+                        </Button>
+                      )}
                     </div>
                   </div>
                 )}
