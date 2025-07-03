@@ -3,5 +3,9 @@ import { getCurrentUser } from "@/lib/actions/userActions";
 
 export default async function page() {
   const currentUser = await getCurrentUser();
-  return <TestPage user={currentUser} />;
+  return (
+    <div className="dashboard-container">
+      <TestPage user={currentUser} />
+    </div>
+  );
 }
