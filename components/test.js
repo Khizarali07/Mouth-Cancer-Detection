@@ -131,10 +131,10 @@ export default function TestPage({ user }) {
   };
 
   const renderTestContent = () => {
-    const progressWidth = `${(currentTest / 3) * 100}%`;
+    const progressWidth = `${((currentTest - 1) / 3) * 100}%`;
 
     return (
-      <div className="w-full flex flex-col items-start justify-center">
+      <div className="w-full flex flex-col md:items-start md:justify-center">
         <div className="flex-1">
           <div className="container mx-auto px-4 py-8">
             <div className="-space-y-6">
@@ -153,7 +153,7 @@ export default function TestPage({ user }) {
                       />
                     </div>
                     <span className="text-sm font-medium text-gray-600">
-                      {Math.round((currentTest / 3) * 100)}%
+                      {Math.round(((currentTest - 1) / 3) * 100)}%
                     </span>
                   </div>
                 </div>
@@ -181,9 +181,9 @@ export default function TestPage({ user }) {
                         </ul>
                       </div>
                     </div>
-                    <div className=" flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                       {/* Upload Section */}
-                      <div className="flex flex-col items-start gap-10 w-full sm:w-auto">
+                      <div className="flex flex-col md:flex-row justify-center items-center gap-3 w-full sm:w-auto">
                         {/* File Input */}
                         <input
                           id="mouth-upload"
@@ -223,11 +223,11 @@ export default function TestPage({ user }) {
                   </div>
                 )}
               </div>
-              <span className="mt-20 text-lg font-semibold">
+              <span className="text-lg font-semibold">
                 Step {currentTest} of 3
               </span>
             </div>
-            <div className="w-48 h-1 bg-light-300 rounded-full">
+            <div className="w-48 h-1 bg-slate-400 rounded-full">
               <div
                 className="h-1 bg-brand rounded-full"
                 style={{ width: progressWidth }}
