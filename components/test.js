@@ -239,5 +239,5 @@ export default function TestPage({ user }) {
     );
   };
 
-  return <div className="container mx-auto py-12">{renderTestContent()}</div>;
+  return <div className="container py-12">{renderTestContent()}</div>;
 }
