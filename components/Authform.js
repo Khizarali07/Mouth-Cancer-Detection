@@ -62,7 +62,9 @@ const AuthForm = ({ type }) => {
       }
       setAccountId(user.accountId);
     } catch {
-      setErrorMessage("Failed to create account. Please try again.");
+      setErrorMessage(
+        "User not found Check your internet connection and try again."
+      );
     } finally {
       setIsLoading(false);
     }
