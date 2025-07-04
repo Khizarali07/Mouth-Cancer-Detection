@@ -37,7 +37,7 @@ const ActionDropdown = ({ file }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [action, setAction] = useState(null);
-  const [name, setName] = useState(file.name.split(".").slice(0, -1).join("."));
+  const [name, setName] = useState(file.name);
   const [isLoading, setIsLoading] = useState(false);
   const [emails, setEmails] = useState([]);
 

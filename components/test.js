@@ -73,8 +73,6 @@ export default function TestPage({ user }) {
       );
       const data = await response.json();
 
-      console.log("this is a data :", data);
-
       // Upload
       const newFile = await uploadFile({
         file,
