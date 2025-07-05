@@ -10,7 +10,7 @@ async function DocumentPage({ params }) {
   const currentUser = await getCurrentUser();
 
   return (
-    <div className="dashboard-container">
+    <div className="page-container">
       <TestPage user={currentUser} fileData={fileData} />
     </div>
   );

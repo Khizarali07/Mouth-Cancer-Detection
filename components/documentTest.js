@@ -139,6 +139,8 @@ export default function TestPage({ user, fileData }) {
       } else if (currentTest === 3) {
         const backendData = formatDataForBackend(medicalData);
 
+        console.log("This is backend data", backendData);
+
         const response = await fetch("http://localhost:5000/predict/csv", {
           method: "POST",
           headers: {
@@ -148,6 +150,8 @@ export default function TestPage({ user, fileData }) {
         });
 
         data = await response.json();
+
+        console.log("This is data", data);
 
         // Update
         const res = await updateData({
@@ -181,36 +185,80 @@ export default function TestPage({ user, fileData }) {
 
   const renderTestContent = () => {
     const progressWidth = `${((currentTest - 1) / 3) * 100}%`;
+    const steps = [
+      { number: 1, label: "Mouth Image" },
+      { number: 2, label: "Biopsy Analysis" },
+      { number: 3, label: "Medical Info" },
+    ];
 
     return (
-      <div className="w-full flex flex-col md:items-start md:justify-center">
-        <div className="flex-1">
-          <div className="container mx-auto px-4 py-8">
-            <div className="space-y-6">
-              {/* Progress Bar */}
+      <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              Mouth Cancer Detection
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Complete the following steps for your analysis
+            </p>
+          </div>
 
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm font-medium text-gray-600">
-                    Step {currentTest} of 3
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <div className="w-48 h-1 bg-gray-200 rounded-full">
-                      <div
-                        className="h-1 bg-brand rounded-full transition-all duration-300"
-                        style={{ width: progressWidth }}
-                      />
+          {/* Progress Steps */}
+          <div className="mb-12 px-4 sm:px-0">
+            <div className="relative">
+              {/* Progress Line */}
+              <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-200 -translate-y-1/2 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500 ease-in-out"
+                  style={{ width: progressWidth }}
+                />
+              </div>
+
+              {/* Steps */}
+              <div className="relative flex justify-between z-10">
+                {steps.map((step) => (
+                  <div key={step.number} className="flex flex-col items-center">
+                    <div
+                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mb-2 transition-all duration-300 ${
+                        currentTest >= step.number
+                          ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-black shadow-lg shadow-blue-200 transform scale-110"
+                          : "bg-white text-gray-400 border-2 border-gray-300"
+                      }`}
+                    >
+                      {step.number}
                     </div>
-                    <span className="text-sm font-medium text-gray-600">
-                      {Math.round(((currentTest - 1) / 3) * 100)}%
+                    <span
+                      className={`text-xs font-medium ${
+                        currentTest === step.number
+                          ? "text-blue-600 font-semibold"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {step.label}
                     </span>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
+            <div className="p-6 sm:p-8">
+              <div className="mb-6 flex justify-between items-center">
+                <h2 className="text-xl font-bold text-gray-800">
+                  {steps[currentTest - 1]?.label || "Mouth Image"}
+                </h2>
+                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  Step {currentTest} of {steps.length}
+                </span>
               </div>
 
               {/* Test Content */}
-              <div className="space-y-8">
+              <div className="transition-opacity duration-300">
                 <Test1
+                  currentFile={fileData}
                   currentTest={currentTest}
                   files={files}
                   setFiles={setFiles}
@@ -219,6 +267,7 @@ export default function TestPage({ user, fileData }) {
                   handleNext={handleNext}
                 />
                 <Test2
+                  currentFile={fileData}
                   currentTest={currentTest}
                   files={files}
                   setFiles={setFiles}
@@ -227,7 +276,6 @@ export default function TestPage({ user, fileData }) {
                   biopsyResult={biopsyResult}
                   handleNext={handleNext}
                 />
-
                 <Test3
                   currentTest={currentTest}
                   formData={formData}
@@ -237,21 +285,37 @@ export default function TestPage({ user, fileData }) {
                   medicalResult={medicalResult}
                 />
               </div>
-              <span className="text-lg font-semibold">
-                Step {currentTest} of 3
-              </span>
             </div>
-            <div className="w-48 h-1 bg-slate-400 rounded-full">
-              <div
-                className="h-1 bg-brand rounded-full"
-                style={{ width: progressWidth }}
-              />
+
+            {/* Progress Footer */}
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
+                      style={{ width: progressWidth }}
+                    />
+                  </div>
+                </div>
+                <span className="ml-4 text-sm font-medium text-gray-600">
+                  {Math.round(((currentTest - 1) / steps.length) * 100)}%
+                  Complete
+                </span>
+              </div>
             </div>
+          </div>
+
+          {/* Help Text */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-500">
+              Need help? Contact our support team.
+            </p>
           </div>
         </div>
       </div>
     );
   };
 
-  return <div className="container py-12">{renderTestContent()}</div>;
+  return renderTestContent();
 }
