@@ -106,18 +106,21 @@ const Dashboard = async () => {
 
             {/* Centering wrapper */}
             <div className="max-w-sm w-full mt-6 flex justify-center items-center">
-              <Link href="/dashboard/test" className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  className="uploader-button text-light-400 hover:bg-brand-500 hover:shadow-xl hover:scale-105 transition-all duration-300"
-                >
-                  <Image
-                    src="/assets/icons/upload.svg"
-                    alt="upload"
-                    width={24}
-                    height={24}
-                  />
-                  <span className="font-semibold">Start Screening</span>
+              <Link
+                href="/dashboard/test"
+                className="flex items-center gap-2 group"
+              >
+                <Button className="uploader-button bg-brand hover:bg-brand text-white px-6 py-3 rounded-lg font-medium text-base tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src="/assets/icons/upload.svg"
+                      alt="upload"
+                      width={20}
+                      height={20}
+                      className="transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <span className="font-semibold">Start Screening</span>
+                  </div>
                 </Button>
               </Link>
             </div>
@@ -163,7 +166,7 @@ const Dashboard = async () => {
       </section>
 
       {/* Recent files uploaded */}
-      <section className="dashboard-recent-files">
+      <section className="dashboard-recent-files mb-4">
         <h2 className="h3 xl:h2 text-light-100">Recent Images uploaded</h2>
         {files.documents.length > 0 ? (
           <ul className="mt-5 flex flex-col gap-5">

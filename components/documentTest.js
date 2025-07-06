@@ -161,6 +161,7 @@ export default function TestPage({ user, fileData }) {
           path,
           Result: JSON.stringify(data), // replace with real prediction
           medicalData: JSON.stringify(medicalData),
+          isCompleted: true,
         });
 
         setMedicalResult(data);
@@ -192,65 +193,91 @@ export default function TestPage({ user, fileData }) {
     ];
 
     return (
-      <div className="h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-blue-50 to-indigo-50 py-8 sm:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto w-full px-0 sm:px-2">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+          <div className="text-center mb-8 sm:mb-12 px-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Mouth Cancer Detection
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Complete the following steps for your analysis
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+              Upload an image of the affected area to begin your analysis
             </p>
           </div>
 
           {/* Progress Steps */}
-          <div className="mb-12 px-4 sm:px-0">
+          <div className="mb-8 sm:mb-10 px-1 sm:px-2">
             <div className="relative">
-              {/* Progress Line */}
-              <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-200 -translate-y-1/2 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500 ease-in-out"
-                  style={{ width: progressWidth }}
-                />
-              </div>
-
               {/* Steps */}
-              <div className="relative flex justify-between z-10">
+              <div className="relative flex justify-between z-10 w-full">
                 {steps.map((step) => (
-                  <div key={step.number} className="flex flex-col items-center">
+                  <div
+                    key={step.number}
+                    className="flex flex-col items-center flex-1 max-w-[33.333%] px-1 relative"
+                  >
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold mb-2 transition-all duration-300 ${
-                        currentTest >= step.number
-                          ? "bg-gradient-to-br from-blue-500 to-indigo-600 text-black shadow-lg shadow-blue-200 transform scale-110"
-                          : "bg-white text-gray-400 border-2 border-gray-300"
+                      className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold mb-1 sm:mb-2 transition-all duration-300 ${
+                        currentTest > step.number
+                          ? "bg-green-500 text-white"
+                          : currentTest === step.number
+                          ? "bg-gradient-to-br from-blue to-indigo-600 text-white shadow-md shadow-blue-200 transform scale-110"
+                          : "bg-white text-gray-400 border-2 border-gray-200"
                       }`}
                     >
-                      {step.number}
+                      {currentTest > step.number ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 sm:h-5 sm:w-5"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      ) : (
+                        step.number
+                      )}
                     </div>
                     <span
-                      className={`text-xs font-medium ${
-                        currentTest === step.number
-                          ? "text-blue-600 font-semibold"
+                      className={`text-[10px] xs:text-xs text-center font-medium ${
+                        currentTest >= step.number
+                          ? "text-brand font-semibold"
                           : "text-gray-500"
                       }`}
                     >
                       {step.label}
                     </span>
+                    {currentTest > step.number && (
+                      <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-green-500 rounded-full"></div>
+                    )}
                   </div>
                 ))}
+                {/* Progress line */}
+                <div className="absolute top-4 left-0 right-0 h-1 bg-gray-200 -z-10">
+                  <div
+                    className="h-full bg-gradient-to-r from-green-500 to-blue-500 transition-all duration-500 ease-in-out"
+                    style={{
+                      width: `${
+                        ((currentTest - 1) / (steps.length - 1)) * 100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-            <div className="p-6 sm:p-8">
-              <div className="mb-6 flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-800">
-                  {steps[currentTest - 1]?.label || "Mouth Image"}
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl transition-all duration-300 hover:shadow-xl sm:hover:shadow-2xl">
+            <div className="sm:p-4 lg:p-6">
+              <div className="mb-4 sm:mb-6 p-3 flex flex-col sm:flex-row justify-between items-center sm:items-center gap-3">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900">
+                  {steps[currentTest - 1]?.label || "Upload Image"}
                 </h2>
-                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                <span className="text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 border border-gray-100 px-3 py-1.5 rounded-full whitespace-nowrap">
                   Step {currentTest} of {steps.length}
                 </span>
               </div>
@@ -288,17 +315,10 @@ export default function TestPage({ user, fileData }) {
             </div>
 
             {/* Progress Footer */}
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-100">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
-                      style={{ width: progressWidth }}
-                    />
-                  </div>
-                </div>
-                <span className="ml-4 text-sm font-medium text-gray-600">
+            <div className="bg-gray-50 px-4 sm:px-6 py-3 border-t border-gray-100">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0"></div>
+                <span className="text-xs sm:text-sm font-medium text-gray-600 whitespace-nowrap">
                   {Math.round(((currentTest - 1) / steps.length) * 100)}%
                   Complete
                 </span>
@@ -307,9 +327,15 @@ export default function TestPage({ user, fileData }) {
           </div>
 
           {/* Help Text */}
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
-              Need help? Contact our support team.
+          <div className="mt-6 sm:mt-8 text-center">
+            <p className="text-xs sm:text-sm text-gray-500">
+              Need help?{" "}
+              <a
+                href="#"
+                className="text-brand hover:text-brand-100 font-medium transition-colors"
+              >
+                Contact our support team
+              </a>
             </p>
           </div>
         </div>

@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button";
 import { signOutUser } from "@/lib/actions/userActions";
 
 const MobileNavigation = ({
-  $id: ownerId,
-  accountId,
+  // $id: ownerId,
+  // accountId,
   fullName,
   avatar,
   email,
@@ -99,18 +99,17 @@ const MobileNavigation = ({
 
           <div className="flex flex-col justify-between gap-5 pb-5">
             <Link href="/dashboard/test" className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                className="mobile-test-button"
-                // className="bg-brand text-white hover:bg-brand-500 transition-colors flex items-center gap-2 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              >
-                <Image
-                  src="/assets/icons/upload.svg"
-                  alt="upload"
-                  width={24}
-                  height={24}
-                />
-                <span className="font-semibold">Start Screening</span>
+              <Button className="uploader-button bg-brand hover:bg-brand text-white px-6 py-3 rounded-lg font-medium text-base tracking-wide transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                <div className="flex items-center gap-3">
+                  <Image
+                    src="/assets/icons/upload.svg"
+                    alt="upload"
+                    width={20}
+                    height={20}
+                    className="transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <span className="font-semibold">Start Screening</span>
+                </div>
               </Button>
             </Link>
             <Button

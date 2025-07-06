@@ -63,7 +63,11 @@ const AuthForm = ({ type }) => {
       setAccountId(user.accountId);
     } catch {
       setErrorMessage(
-        "User not found Check your internet connection and try again."
+        `${
+          type === "sign-in"
+            ? "Attempting to sign in failed."
+            : "Attempting to sign up failed."
+        }. Check your internet connection and try again.`
       );
     } finally {
       setIsLoading(false);

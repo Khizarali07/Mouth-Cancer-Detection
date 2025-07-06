@@ -106,6 +106,7 @@
 
 @layer utilities {
   /* ===== TYPOGRAPHY */
+
   .h1 {
     @apply text-[34px] leading-[42px] font-bold;
   }
@@ -213,6 +214,10 @@
   }
   .nav-icon-active {
     @apply filter-white opacity-100 !important;
+  }
+
+  .uploader-button-icon:hover {
+    @apply filter-black;
   }
 
   /* =====  STYLE CLASSES */

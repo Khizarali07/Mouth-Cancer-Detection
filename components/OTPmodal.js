@@ -19,29 +19,29 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-
+import { useToast } from "@/hooks/use-toast";
 import { verifySecret, sendEmailOTP } from "@/lib/actions/userActions";
 
 const OtpModal = ({ accountId, email }) => {
   const router = useRouter();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [error, setError] = useState({ message: "", error: false });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    console.log({ accountId, password });
+    setError({ message: "", error: false });
 
     try {
       const sessionId = await verifySecret({ accountId, password });
 
-      console.log({ sessionId });
-
       if (sessionId) router.push("/dashboard");
     } catch (error) {
-      console.log("Failed to verify OTP", error);
+      setError({ message: "Invalid OTP", error: true });
     }
 
     setIsLoading(false);
@@ -69,6 +69,9 @@ const OtpModal = ({ accountId, email }) => {
           <AlertDialogDescription className="subtitle-2 text-center text-light-100">
             We&apos;ve sent a code to{" "}
             <span className="pl-1 text-brand">{email}</span>
+            <p className="mt-2 text-md text-red">
+              {error.error ? error.message : ""}
+            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
 

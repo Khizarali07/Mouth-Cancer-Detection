@@ -53,7 +53,7 @@ const Page = async ({ searchParams, params }) => {
 
       {/* Section to render files or a message if no files are uploaded */}
       {files.total > 0 ? (
-        <section className="file-list">
+        <section className="file-list mb-4">
           {/* Iterating over the fetched files and rendering a Card component for each */}
           {files.documents.map((file) => (
             <Card key={file.$id} file={file} />

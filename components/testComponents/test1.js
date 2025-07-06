@@ -43,7 +43,7 @@ export default function Test1({
   console.log("This is currentFile", currentFile);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 py-8">
       <div className="text-center mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
           Mouth Cancer Detection
@@ -54,7 +54,7 @@ export default function Test1({
       </div>
 
       <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <div className="p-6 md:p-8">
+        <div className="p-4 md:p-8">
           <div className="grid md:grid-cols-3 gap-8">
             {/* Main Upload Area */}
             <div className="md:col-span-2 space-y-6">
@@ -330,16 +330,16 @@ export default function Test1({
                           ? "No concerning signs detected. However, regular dental check-ups are recommended."
                           : "Potential concerns detected. Please consult with a healthcare professional for further evaluation."}
                       </p>
-                      {handleNext && (
-                        <Button
-                          onClick={handleNext}
-                          className="mt-4 bg-blue-600 hover:bg-blue-700 text-black"
-                        >
-                          Continue to Next Step →
-                        </Button>
-                      )}
                     </div>
                   </div>
+                  {handleNext && (
+                    <Button
+                      onClick={handleNext}
+                      className="mt-4 bg-blue-600 hover:bg-blue-700 text-black"
+                    >
+                      Continue to Next Step →
+                    </Button>
+                  )}
                 </div>
               )}
             </div>

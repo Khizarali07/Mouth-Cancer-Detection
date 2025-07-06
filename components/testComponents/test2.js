@@ -53,7 +53,7 @@ export default function Test2({
       </div>
 
       <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <div className="p-6 md:p-8">
+        <div className="p-2 md:p-8">
           <div className="grid md:grid-cols-3 gap-8">
             {/* Main Upload Area */}
             <div className="md:col-span-2 space-y-6">
@@ -291,16 +291,16 @@ export default function Test2({
                           ? "No concerning signs detected in the biopsy sample. However, regular check-ups are recommended."
                           : "Potential concerns detected in the biopsy sample. Please consult with a healthcare professional for further evaluation."}
                       </p>
-                      {handleNext && (
-                        <Button
-                          onClick={handleNext}
-                          className="mt-2 bg-blue-600 hover:bg-blue-700 text-black"
-                        >
-                          Continue to Next Step →
-                        </Button>
-                      )}
                     </div>
                   </div>
+                  {handleNext && (
+                    <Button
+                      onClick={handleNext}
+                      className="mt-4 bg-blue-600 hover:bg-blue-700 text-black"
+                    >
+                      Continue to Next Step →
+                    </Button>
+                  )}
                 </div>
               )}
             </div>

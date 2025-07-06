@@ -95,7 +95,7 @@ function HomeScreen(currentUser) {
               </Link>
               <Link
                 href="/sign-up"
-                className="block text-center px-4 py-3 rounded-lg text-base font-medium text-white bg-gradient-to-r from-brand-500 to-accent-500 hover:from-brand-600 hover:to-accent-600 shadow-md hover:shadow-lg transition-all duration-200"
+                className="block px-4 py-3 rounded-lg text-base font-medium text-brand-700 bg-gradient-to-r from-brand-500 to-accent-500 hover:from-brand-600 hover:to-accent-600 shadow-md hover:shadow-lg transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <FaUserPlus className="inline mr-2 -mt-0.5" />
