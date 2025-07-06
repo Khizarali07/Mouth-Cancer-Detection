@@ -167,6 +167,7 @@ export default function TestPage({ user, fileData }) {
         setMedicalResult(data);
       }
 
+      setFiles(null);
       toast({
         description: "Test Completed Successfully.",
         className: "success-toast",

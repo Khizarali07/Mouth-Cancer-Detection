@@ -93,51 +93,112 @@ const ActionDropdown = ({ file }) => {
         return;
       }
 
-      // Create PDF
-      const doc = new jsPDF();
+      const result = JSON.parse(fileData.Result || "{}");
+      const resultBiopsy = JSON.parse(fileData.resultBiopsy || "{}");
+      const resultMedical = JSON.parse(fileData.resultMedical || "{}");
+      const medical = JSON.parse(fileData.medicalData || "{}");
 
-      // Helper function to safely add text
-      const addText = (text, x, y, fontSize = 12) => {
-        if (text === undefined || text === null) return;
+      const doc = new jsPDF();
+      const lineSpacing = 8;
+      const pageHeight = doc.internal.pageSize.getHeight();
+      let y = 20;
+
+      // Auto page-break-aware text function
+      const addText = (label, value, indent = 0, fontSize = 12) => {
+        if (value === undefined || value === null) return;
+        if (y > pageHeight - 20) {
+          doc.addPage();
+          y = 20;
+        }
         doc.setFontSize(fontSize);
-        doc.text(String(text), x, y);
+        doc.text(`${label}: ${String(value)}`, 20 + indent, y);
+        y += lineSpacing;
       };
 
-      // Add title
-      addText("Cancer Prediction Result", 20, 20, 20);
+      // Title
+      doc.setFontSize(18);
+      doc.text("Oral Cancer Diagnostic Report", 20, y);
+      y += lineSpacing * 2;
 
-      // Add file information
-      addText(`File Name: ${fileData.name || "N/A"}`, 20, 40);
+      doc.setFontSize(12);
+      const intro =
+        "This document provides a comprehensive analysis based on the patient's uploaded medical images and questionnaire data. The results below are generated using AI-assisted tools and are intended to support clinical decision-making.";
+      const introLines = doc.splitTextToSize(intro, 170);
+      introLines.forEach((line) => addText("", line));
+      y += lineSpacing;
+
+      // Section: File Information
+      doc.setFontSize(14);
+      doc.text("1. File Information", 20, y);
+      y += lineSpacing;
+      addText("Name", fileData.name);
+      addText("Type", fileData.type);
+      addText("Extension", fileData.extension.toUpperCase());
+      addText("Size", `${fileData.size} bytes`);
+      addText("Upload Completed", fileData.isCompleted ? "Yes" : "No");
+      y += lineSpacing;
+
+      // Section: Image Analysis
+      doc.setFontSize(14);
+      doc.text("2. Image Analysis Result", 20, y);
+      y += lineSpacing;
+      addText("Prediction", result.prediction);
+      addText("Confidence Score", `${(result.confidence * 100).toFixed(2)}%`);
+      y += lineSpacing;
+
+      // Section: Biopsy
+      doc.setFontSize(14);
+      doc.text("3. Biopsy Analysis Result", 20, y);
+      y += lineSpacing;
+      addText("Prediction", resultBiopsy.prediction || "N/A");
       addText(
-        `File Size: ${fileData.size ? `${fileData.size} bytes` : "N/A"}`,
-        20,
-        50
+        "Confidence Score",
+        resultBiopsy.confidence
+          ? `${(resultBiopsy.confidence * 100).toFixed(2)}%`
+          : "N/A"
       );
-      addText(`File Type: ${fileData.type || "N/A"}`, 20, 60);
+      y += lineSpacing;
 
-      // Add prediction result
-      addText("Prediction Result", 20, 80, 16);
-      if (fileData.Result) {
-        const [prediction, confidence] = fileData.Result.split(",");
-        addText(prediction || "N/A", 20, 90);
+      // Section: Risk Evaluation
+      doc.setFontSize(14);
+      doc.text("4. Medical Risk Evaluation", 20, y);
+      y += lineSpacing;
+      addText("Risk Assessment", resultMedical.prediction || "Not Available");
+      y += lineSpacing;
 
-        // Add confidence level
-        addText("Confidence Level", 20, 110, 16);
-        addText(confidence || "N/A", 20, 120);
+      // Section: Medical Questionnaire
+      doc.setFontSize(14);
+      doc.text("5. Medical History & Questionnaire", 20, y);
+      y += lineSpacing;
+
+      for (const [key, value] of Object.entries(medical)) {
+        const formattedKey = key
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (s) => s.toUpperCase());
+        addText(formattedKey, value, 5);
       }
 
-      // Add owner information
-      addText("Owner Information", 20, 140, 16);
-      if (fileData.owner) {
-        addText(`Name: ${fileData.owner.fullName || "N/A"}`, 20, 150);
-        addText(`Email: ${fileData.owner.email || "N/A"}`, 20, 160);
-      }
+      y += lineSpacing;
 
-      // Add timestamp
-      addText(`Generated on: ${new Date().toLocaleString()}`, 20, 280, 10);
+      // Section: Submitted By
+      doc.setFontSize(14);
+      doc.text("6. Submitted By", 20, y);
+      y += lineSpacing;
+      addText("Name", fileData.owner?.fullName || "N/A");
+      addText("Email", fileData.owner?.email || "N/A");
+      y += lineSpacing * 2;
 
-      // Save the PDF
-      doc.save(`${fileData.name || "document"}-details.pdf`);
+      // Footer / Disclaimer
+      doc.setFontSize(10);
+      const disclaimer =
+        "Disclaimer: This report is automatically generated and is intended to assist medical professionals. It should not be used as a sole basis for medical diagnosis or treatment.";
+      const lines = doc.splitTextToSize(disclaimer, 170);
+      lines.forEach((line) => addText("", line));
+      y += lineSpacing;
+
+      addText("Report generated on", new Date().toLocaleString());
+
+      doc.save(`${fileData.name || "oral-cancer-report"}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast.error("Failed to generate PDF");

@@ -19,7 +19,7 @@ const Layout = async ({ children }) => {
   return (
     <main className="flex">
       <Sidebar {...currentUser} />
-      <section className="flex h-full  flex-1 flex-col">
+      <section className="flex h-screen  flex-1 flex-col">
         <MobileNavigation
           fullName={currentUser.fullName}
           avatar={currentUser.avatar}
