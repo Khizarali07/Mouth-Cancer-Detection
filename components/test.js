@@ -70,6 +70,14 @@ export default function TestPage({ user }) {
       );
       const data = await response.json();
 
+      if (data.error) {
+        toast({
+          description: data.error,
+          className: "error-toast",
+        });
+        return;
+      }
+
       // Upload
       const newFile = await uploadFile({
         file,

@@ -112,6 +112,14 @@ export default function TestPage({ user, fileData }) {
           body: formData,
         });
         data = await response.json();
+
+        if (data.error) {
+          toast({
+            description: data.error,
+            className: "error-toast",
+          });
+          return;
+        }
         // Update
         const res = await updateData({
           fileId: fileData.$id,
