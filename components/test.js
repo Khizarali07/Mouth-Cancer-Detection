@@ -105,8 +105,8 @@ export default function TestPage({ user }) {
     ];
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto w-full px-2 sm:px-4">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -118,7 +118,7 @@ export default function TestPage({ user }) {
           </div>
 
           {/* Progress Steps */}
-          <div className="mb-12 px-4 sm:px-0">
+          <div className="mb-8 sm:mb-12 px-2 sm:px-4">
             <div className="relative">
               {/* Progress Line */}
               <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-200 -translate-y-1/2 rounded-full overflow-hidden">
@@ -129,7 +129,7 @@ export default function TestPage({ user }) {
               </div>
 
               {/* Steps */}
-              <div className="relative flex justify-between z-10">
+              <div className="relative flex justify-between z-10 w-full">
                 {steps.map((step, index) => (
                   <div key={step.number} className="flex flex-col items-center">
                     <div
@@ -157,8 +157,8 @@ export default function TestPage({ user }) {
           </div>
 
           {/* Main Content */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-            <div className="p-6 sm:p-8">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl w-full">
+            <div className="p-4 sm:p-6 md:p-8">
               <div className="mb-6 flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-800">
                   {steps[currentTest - 1]?.label || "Upload Image"}
