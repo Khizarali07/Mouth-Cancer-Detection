@@ -16,10 +16,7 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} overflow-y-auto font-poppins antialiased`}
-        suppressHydrationWarning
-      >
+      <body className={`${poppins.variable} font-poppins antialiased`}>
         {children}
       </body>
     </html>

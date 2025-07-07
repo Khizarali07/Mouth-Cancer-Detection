@@ -65,7 +65,7 @@ async function DocumentPage({ params }) {
 
   if (!fileData.isCompleted) {
     return (
-      <div className="sm:block page-container">
+      <div className="sm:block">
         <TestPage user={currentUser} fileData={fileData} />
       </div>
     );
