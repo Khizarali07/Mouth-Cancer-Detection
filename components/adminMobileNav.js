@@ -40,13 +40,17 @@ const MobileNavigation = ({
 
   return (
     <header className="mobile-header">
-      <Image
-        src="/assets/icons/logo-full-brand.png"
-        alt="logo"
-        width={150}
-        height={70}
-        className="h-auto"
-      />
+      <div className="header-user">
+        <Link href="/">
+          <Image
+            src="/assets/icons/logo-full-brand.png"
+            alt="logo"
+            width={150}
+            height={70}
+            className="h-auto"
+          />
+        </Link>
+      </div>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger>
@@ -92,7 +96,7 @@ const MobileNavigation = ({
                       width={24}
                       height={24}
                       className={cn(
-                        "nav-icon",
+                        "nav-icon-mob",
                         pathname === url && "nav-icon-active"
                       )}
                     />

@@ -26,7 +26,7 @@ const Sidebar = ({ fullName, avatar, email }) => {
     <aside className="sidebar">
       <Link href="/">
         <Image
-          src="/assets/icons/logo-full-brand.png"
+          src="/assets/icons/full-Logo.png"
           alt="logo"
           width={180}
           height={50}
