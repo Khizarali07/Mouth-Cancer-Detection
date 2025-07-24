@@ -42,13 +42,18 @@ const MobileNavigation = ({
     <header className="mobile-header">
       <div className="header-user">
         <Link href="/">
-          <Image
-            src="/assets/icons/logo-full-brand.png"
-            alt="logo"
-            width={150}
-            height={70}
-            className="h-auto"
-          />
+          <div className="flex items-center gap-2">
+            <Image
+              src="/assets/icons/logo.png"
+              alt="logo"
+              width={36}
+              height={36}
+              className="h-auto lg:hidden"
+            />
+            <p className="h8 text-black font-extrabold">
+              Mouth Cancer Detection
+            </p>
+          </div>
         </Link>
       </div>
 

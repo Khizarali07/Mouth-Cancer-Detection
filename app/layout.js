@@ -8,9 +8,9 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Mouth Vision",
+  title: "Mouth Cancer Detection",
   description:
-    "Mouth Vision - Empowering early detection of mouth cancer using advanced AI technology.",
+    "Mouth Cancer Detection - Empowering early detection of mouth cancer using advanced AI technology.",
 };
 
 export default async function RootLayout({ children }) {

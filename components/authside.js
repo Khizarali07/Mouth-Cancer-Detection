@@ -6,13 +6,18 @@ function Authside() {
     <section className="hidden w-1/2 items-center justify-center bg-brand p-10 lg:flex xl:w-2/5">
       <div className="flex max-h-[800px] max-w-[430px] flex-col justify-center space-y-16">
         <Link href="/">
-          <Image
-            src="/assets/icons/full-Logo.png"
-            alt="logo"
-            width={224}
-            height={82}
-            className="h-auto"
-          />
+          <div className="flex items-center gap-2">
+            <Image
+              src="/assets/icons/logo.png"
+              alt="logo"
+              width={52}
+              height={52}
+              className="lg:block h-auto"
+            />
+            <p className="h4 text-white font-extrabold">
+              Mouth Cancer Detection
+            </p>
+          </div>
         </Link>
         <div className="space-y-5 text-white">
           <h1 className="h1">Detect Mouth Cancer with Confidence</h1>

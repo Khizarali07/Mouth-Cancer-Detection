@@ -12,21 +12,23 @@ const Sidebar = ({ fullName, avatar, email }) => {
   return (
     <aside className="sidebar">
       <Link href="/">
-        <Image
-          src="/assets/icons/full-Logo.png"
-          alt="logo"
-          width={180}
-          height={50}
-          className="hidden h-auto lg:block"
-        />
-
-        <Image
-          src="/assets/icons/Logo.png"
-          alt="logo"
-          width={52}
-          height={52}
-          className="lg:hidden"
-        />
+        <div className="flex items-center gap-2">
+          <Image
+            src="/assets/icons/Logo.png"
+            alt="logo"
+            width={52}
+            height={52}
+            className="lg:block"
+          />
+          <p className="h4 text-white font-extrabold">Mouth Cancer Detection</p>
+          <Image
+            src="/assets/icons/Logo.png"
+            alt="logo"
+            width={52}
+            height={52}
+            className="lg:hidden"
+          />
+        </div>
       </Link>
 
       <nav className="sidebar-nav">

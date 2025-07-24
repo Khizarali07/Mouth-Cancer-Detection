@@ -16,13 +16,13 @@ export default function Test2({
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files.length > 0) {
+    if (e.target.files && e.target.files?.length > 0) {
       setFiles(Array.from(e.target.files));
     }
   };
 
   const handleUploadAndAnalyze = async () => {
-    if (files.length === 0) return;
+    if (files?.length === 0) return;
 
     setIsAnalyzing(true);
     try {
@@ -60,7 +60,7 @@ export default function Test2({
               {/* File Upload Section */}
               <div
                 className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
-                  files.length > 0
+                  files?.length > 0
                     ? "border-green-400 bg-green-50"
                     : "border-gray-300 hover:border-blue-400 bg-gray-50"
                 }`}
@@ -85,12 +85,12 @@ export default function Test2({
                   </div>
                   <div>
                     <h3 className="text-lg font-medium text-gray-900 mb-1">
-                      {files.length > 0
+                      {files?.length > 0
                         ? "Image Selected"
                         : "Upload Biopsy Image"}
                     </h3>
                     <p className="text-sm text-gray-500 mb-4">
-                      {files.length > 0
+                      {files?.length > 0
                         ? files[0].name
                         : "Click to browse or drag & drop your biopsy image"}
                     </p>
@@ -103,7 +103,7 @@ export default function Test2({
                     onChange={handleFileChange}
                   />
                   <Button
-                    variant={files.length > 0 ? "outline" : "default"}
+                    variant={files?.length > 0 ? "outline" : "default"}
                     className="gap-2"
                     onClick={(e) => e.stopPropagation()}
                   >
@@ -121,7 +121,7 @@ export default function Test2({
                         d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                       />
                     </svg>
-                    {files.length > 0 ? "Change File" : "Select File"}
+                    {files?.length > 0 ? "Change File" : "Select File"}
                   </Button>
                   <p className="text-xs text-gray-500">
                     Supports JPG, PNG (Max 10MB)
@@ -140,9 +140,9 @@ export default function Test2({
                 </Button>
                 <Button
                   onClick={handleUploadAndAnalyze}
-                  disabled={files.length === 0 || isAnalyzing}
+                  disabled={files?.length === 0 || isAnalyzing}
                   className={`w-full sm:w-auto py-6 text-base font-medium transition-colors ${
-                    files.length === 0 || isAnalyzing
+                    files?.length === 0 || isAnalyzing
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 text-black"
                   }`}

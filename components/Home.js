@@ -11,7 +11,7 @@ function HomeScreen(currentUser) {
   console.log("this is current user :", currentUser);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-brand-100 to-brand-100">
       {/* Navigation */}
       <nav className="bg-light-500 backdrop-blur-sm border-b border-secondary-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,8 +27,8 @@ function HomeScreen(currentUser) {
                     className="rounded-md"
                   />
                 </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-brand-600 to-accent-600 bg-clip-text text-transparent">
-                  Mouth Vision
+                <span className="text-2xl font-bold bg-gradient-to-r text-brand bg-clip-text">
+                  Mouth Cancer Detection
                 </span>
               </div>
             </div>
@@ -164,21 +164,51 @@ function HomeScreen(currentUser) {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-8 md:grid-cols-4 lg:gap-12 items-center">
-            {["Dental Clinic", "HealthPlus", "SmileCare", "DentAll"].map(
-              (clinic) => (
-                <div
-                  key={clinic}
-                  className="opacity-70 hover:opacity-100 transition-opacity duration-200"
-                >
-                  <div className="h-12 flex items-center justify-center">
-                    <span className="text-xl font-bold text-gray-700">
-                      {clinic}
-                    </span>
-                  </div>
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+            {[
+              {
+                title: "AI-Powered Analysis",
+                description:
+                  "Advanced Deep Learning algorithms for accurate oral lesion detection and classification",
+                icon: "🔍",
+              },
+              {
+                title: "Instant Results",
+                description:
+                  "Get preliminary screening results within seconds of image upload",
+                icon: "⚡",
+              },
+              {
+                title: "Expert Insights",
+                description:
+                  "Detailed reports with professional recommendations for next steps",
+                icon: "📋",
+              },
+              {
+                title: "Secure & Private",
+                description:
+                  "Your health data is encrypted and protected with enterprise-grade security",
+                icon: "🔒",
+              },
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+              >
+                <div className="p-6">
+                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-              )
-            )}
+                <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
+                  <button className="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors"></button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>

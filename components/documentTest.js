@@ -9,7 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 
 import Test1 from "./testComponents/test1.js";
 import Test2 from "./testComponents/test2.js";
-import Test3 from "./testComponents/test3.js";
+import Test3 from "./testComponents/test3-working.js";
+// import Test3 from "./testComponents/test3.js";
 import { formatDataForBackend } from "@/lib/utils.js";
 
 export default function TestPage({ user, fileData }) {
