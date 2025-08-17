@@ -20,14 +20,14 @@ const Sidebar = ({ fullName, avatar, email }) => {
             height={52}
             className="lg:block"
           />
-          <p className="h4 text-white font-extrabold">Mouth Cancer Detection</p>
-          <Image
+          <p className="h4 text-white font-extrabold hidden lg:block">Mouth Cancer Detection</p>
+          {/* <Image
             src="/assets/icons/Logo.png"
             alt="logo"
             width={52}
             height={52}
             className="lg:hidden"
-          />
+          /> */}
         </div>
       </Link>
 
@@ -44,8 +44,8 @@ const Sidebar = ({ fullName, avatar, email }) => {
                 <Image
                   src={icon}
                   alt={name}
-                  width={24}
-                  height={24}
+                  width={26}
+                  height={26}
                   className={cn(
                     "nav-icon",
                     pathname === url && "nav-icon-active"

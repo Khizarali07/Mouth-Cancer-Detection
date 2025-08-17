@@ -27,7 +27,9 @@ import { Loader2, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function UserPageClient({ users: initialUsers }) {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState(
+    initialUsers.filter((user) => !user.isAdmin)
+  );
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [userToDelete, setUserToDelete] = useState(null);
@@ -69,8 +71,8 @@ export default function UserPageClient({ users: initialUsers }) {
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="p-6 space-y-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <h1 className="text-2xl sm:text-3xl font-bold">Users Management</h1>
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -134,7 +136,9 @@ export default function UserPageClient({ users: initialUsers }) {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
+                    <TableHead className="hidden md:table-cell">
+                      Email
+                    </TableHead>
                     <TableHead>Created At</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -146,7 +150,9 @@ export default function UserPageClient({ users: initialUsers }) {
                       <TableCell className="font-medium">
                         {user.fullName || "N/A"}
                       </TableCell>
-                      <TableCell className="break-all">{user.email}</TableCell>
+                      <TableCell className="break-all hidden md:table-cell">
+                        {user.email}
+                      </TableCell>
                       <TableCell>
                         {new Date(user.$createdAt).toLocaleDateString()}
                       </TableCell>

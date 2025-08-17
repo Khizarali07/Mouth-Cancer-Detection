@@ -42,35 +42,35 @@ export default function Test2({
   if (currentTest !== 2) return null;
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
           Biopsy Image Analysis
         </h1>
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-600 text-base sm:text-lg px-4">
           Upload a clear biopsy image for our AI-powered analysis
         </p>
       </div>
 
       <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <div className="p-2 md:p-8">
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="p-3 sm:p-4 lg:p-6">
+          <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
             {/* Main Upload Area */}
-            <div className="md:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* File Upload Section */}
               <div
-                className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${
+                className={`border-2 border-dashed rounded-xl p-4 sm:p-6 lg:p-8 text-center transition-colors cursor-pointer ${
                   files?.length > 0
                     ? "border-green-400 bg-green-50"
                     : "border-gray-300 hover:border-blue-400 bg-gray-50"
                 }`}
                 onClick={() => document.getElementById("biopsy-upload").click()}
               >
-                <div className="flex flex-col items-center justify-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center">
+                <div className="flex flex-col items-center justify-center space-y-3 sm:space-y-4">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-blue-50 flex items-center justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8 text-blue-500"
+                      className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -83,13 +83,13 @@ export default function Test2({
                       />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-1">
+                  <div className="px-2">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-1 sm:mb-2">
                       {files?.length > 0
                         ? "Image Selected"
                         : "Upload Biopsy Image"}
                     </h3>
-                    <p className="text-sm text-gray-500 mb-4">
+                    <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 break-all">
                       {files?.length > 0
                         ? files[0].name
                         : "Click to browse or drag & drop your biopsy image"}
@@ -104,8 +104,11 @@ export default function Test2({
                   />
                   <Button
                     variant={files?.length > 0 ? "outline" : "default"}
-                    className="gap-2"
-                    onClick={(e) => e.stopPropagation()}
+                    className="gap-2 text-sm sm:text-base px-3 sm:px-4 py-2"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.getElementById("biopsy-upload").click();
+                    }}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -130,18 +133,18 @@ export default function Test2({
               </div>
 
               {/* Upload & Analyze Button */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-6">
                 <Button
                   onClick={handleBack}
                   variant="outline"
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto text-sm sm:text-base"
                 >
                   ← Back
                 </Button>
                 <Button
                   onClick={handleUploadAndAnalyze}
                   disabled={files?.length === 0 || isAnalyzing}
-                  className={`w-full sm:w-auto py-6 text-base font-medium transition-colors ${
+                  className={`w-full sm:flex-1 py-4 sm:py-6 text-sm sm:text-base font-medium transition-colors ${
                     files?.length === 0 || isAnalyzing
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 text-black"
@@ -150,7 +153,7 @@ export default function Test2({
                   {isAnalyzing ? (
                     <div className="flex items-center justify-center">
                       <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -229,7 +232,7 @@ export default function Test2({
                 >
                   <div className="flex items-start">
                     <div className="flex-shrink-0 pt-0.5">
-                      {biopsyResult.prediction.toLowerCase() === "normal" ? (
+                      {biopsyResult?.prediction?.toLowerCase() === "normal" ? (
                         <svg
                           className="w-6 h-6 text-green-500 mr-3"
                           fill="none"
@@ -269,7 +272,7 @@ export default function Test2({
                       <div className="w-full bg-gray-200 rounded-full h-2.5 mb-3">
                         <div
                           className={`h-2.5 rounded-full ${
-                            biopsyResult.prediction.toLowerCase() === "normal"
+                            biopsyResult?.prediction?.toLowerCase() === "normal"
                               ? "bg-green-500"
                               : "bg-amber-500"
                           }`}
@@ -287,7 +290,7 @@ export default function Test2({
                         </span>
                       </p>
                       <p className="text-sm mb-4">
-                        {biopsyResult.prediction.toLowerCase() === "normal"
+                        {biopsyResult?.prediction?.toLowerCase() === "normal"
                           ? "No concerning signs detected in the biopsy sample. However, regular check-ups are recommended."
                           : "Potential concerns detected in the biopsy sample. Please consult with a healthcare professional for further evaluation."}
                       </p>
@@ -296,7 +299,7 @@ export default function Test2({
                   {handleNext && (
                     <Button
                       onClick={handleNext}
-                      className="mt-4 bg-blue-600 hover:bg-blue-700 text-black"
+                      className="mt-4 bg-brand-100 hover:bg-brand-200 text-black"
                     >
                       Continue to Next Step →
                     </Button>

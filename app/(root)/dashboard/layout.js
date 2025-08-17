@@ -17,16 +17,16 @@ const Layout = async ({ children }) => {
   if (currentUser.isAdmin) return redirect("/admin");
 
   return (
-    <main className="flex">
+    <main className="flex min-h-screen">
       <Sidebar {...currentUser} />
-      <section className="flex h-screen  flex-1 flex-col">
+      <section className="flex min-h-screen flex-1 flex-col">
         <MobileNavigation
           fullName={currentUser.fullName}
           avatar={currentUser.avatar}
           email={currentUser.email}
         />
         <Header userId={currentUser.$id} accountId={currentUser.accountId} />
-        <div className="main-content">{children}</div>
+        <div className="main-content flex-1">{children}</div>
       </section>
       <Toaster />
     </main>

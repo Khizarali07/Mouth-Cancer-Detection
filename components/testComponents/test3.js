@@ -80,6 +80,11 @@ export default function Test3({
 
     const isValid = requiredFields.every((field) => {
       const value = formData[field];
+      // For numeric fields, check if value is not empty string and not null/undefined
+      if (["age", "tumorSize", "survivalRate", "cancerStage", "treatmentCost", "economicBurden"].includes(field)) {
+        return value !== undefined && value !== null && value !== "";
+      }
+      // For other fields, check if value is not empty
       return value !== undefined && value !== null && value !== "";
     });
 
@@ -97,7 +102,7 @@ export default function Test3({
         name === "cancerStage" ||
         name === "treatmentCost" ||
         name === "economicBurden"
-          ? Number(value)
+          ? value === "" ? "" : Number(value)
           : value,
     }));
   };
@@ -117,38 +122,26 @@ export default function Test3({
   if (currentTest !== 3) return null;
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-          Medical Information
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Please provide your medical details to help with the analysis
-        </p>
-      </div>
-
+    <div className="w-full">
       <Card className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-        <CardHeader className="bg-gray-50 border-b border-gray-100">
-          <CardTitle className="text-xl font-semibold">
+        <CardHeader className="bg-gray-50 border-b border-gray-100 p-3 sm:p-4">
+          <CardTitle className="text-base sm:text-lg font-semibold">
             Medical History
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
             Your information helps us provide better analysis and
             recommendations
           </CardDescription>
         </CardHeader>
-        <CardContent className="p-6 md:p-8">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <CardContent className="p-3 sm:p-4 lg:p-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Personal Information */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
+              <div className="space-y-3 sm:space-y-4">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 pb-2 border-b border-gray-200">
                   Personal Information
                 </h3>
-                <h3 className="text-xl font-semibold mb-4">
-                  Categorical Information
-                </h3>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
                     <Label
                       htmlFor="country"
@@ -595,14 +588,11 @@ export default function Test3({
               </div>
 
               {/* Risk Factors */}
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900 pb-2 border-b border-gray-200">
+              <div className="space-y-3 sm:space-y-4">
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 pb-2 border-b border-gray-200">
                   Risk Factors & Measurements
                 </h3>
-                <h3 className="text-xl font-semibold mb-4">
-                  Numerical Information
-                </h3>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div>
                     <Label htmlFor="age">Age</Label>
                     <Input
@@ -611,9 +601,9 @@ export default function Test3({
                       name="age"
                       value={formData.age}
                       onChange={handleInputChange}
-                      placeholder="Enter age"
+                      placeholder="Enter your age"
                       min="1"
-                      max="120"
+                      max="200"
                       required
                       className="w-full"
                     />
@@ -644,27 +634,33 @@ export default function Test3({
                     <Label htmlFor="survivalRate">
                       Survival Rate (5-Year, %)
                     </Label>
-                    <input
+                    <Input
                       type="number"
                       id="survivalRate"
                       name="survivalRate"
                       value={formData.survivalRate}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
-                      placeholder="Enter survival rate"
+                      placeholder="Enter survival rate (0-100)"
+                      min="0"
+                      max="100"
+                      required
+                      className="w-full"
                     />
                   </div>
 
                   <div>
                     <Label htmlFor="cancerStage">Cancer Stage</Label>
-                    <input
+                    <Input
                       type="number"
                       id="cancerStage"
                       name="cancerStage"
                       value={formData.cancerStage}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
-                      placeholder="Enter cancer stage"
+                      placeholder="Enter cancer stage (1-4)"
+                      min="0"
+                      max="4"
+                      required
+                      className="w-full"
                     />
                   </div>
 
@@ -672,14 +668,16 @@ export default function Test3({
                     <Label htmlFor="treatmentCost">
                       Cost of Treatment (USD)
                     </Label>
-                    <input
+                    <Input
                       type="number"
                       id="treatmentCost"
                       name="treatmentCost"
                       value={formData.treatmentCost}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
                       placeholder="Enter treatment cost"
+                      min="0"
+                      required
+                      className="w-full"
                     />
                   </div>
 
@@ -687,33 +685,36 @@ export default function Test3({
                     <Label htmlFor="economicBurden">
                       Economic Burden (Lost Workdays per Year)
                     </Label>
-                    <input
+                    <Input
                       type="number"
                       id="economicBurden"
                       name="economicBurden"
                       value={formData.economicBurden}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand"
-                      placeholder="Enter workdays lost"
+                      placeholder="Enter workdays lost (0-365)"
+                      min="0"
+                      max="365"
+                      required
+                      className="w-full"
                     />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6 border-t border-gray-100">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-100">
               <Button
                 type="button"
                 onClick={handleBack}
                 variant="outline"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto text-sm sm:text-base"
               >
                 Back
               </Button>
               <Button
                 type="submit"
                 disabled={!formValid || isSubmitting}
-                className={`w-full sm:w-auto px-8 py-4 rounded-lg shadow-sm transition-all duration-200 ${
+                className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-sm transition-all duration-200 text-sm sm:text-base ${
                   !formValid || isSubmitting
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-brand hover:bg-brand/80 text-white"
@@ -732,11 +733,11 @@ export default function Test3({
           </form>
 
           {medicalResult && (
-            <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg">
+            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <svg
-                    className="h-6 w-6 text-green-500"
+                    className="h-4 w-4 sm:h-5 sm:w-5 text-green-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -750,10 +751,10 @@ export default function Test3({
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-lg font-medium text-green-800">
+                  <h3 className="text-sm sm:text-base font-medium text-green-800">
                     Analysis Complete
                   </h3>
-                  <div className="mt-2 text-sm text-green-700">
+                  <div className="mt-2 text-xs sm:text-sm text-green-700">
                     <p>Prediction: {medicalResult.prediction}</p>
                     {medicalResult.confidence && (
                       <p>

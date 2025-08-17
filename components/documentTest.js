@@ -9,8 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 
 import Test1 from "./testComponents/test1.js";
 import Test2 from "./testComponents/test2.js";
-import Test3 from "./testComponents/test3-working.js";
-// import Test3 from "./testComponents/test3.js";
+import Test3 from "./testComponents/test3.js";
 import { formatDataForBackend } from "@/lib/utils.js";
 
 export default function TestPage({ user, fileData }) {
@@ -48,12 +47,12 @@ export default function TestPage({ user, fileData }) {
     whitePatches: medicalData?.whitePatches || "",
     treatmentType: medicalData?.treatmentType || "",
     earlyDiagnosis: medicalData?.earlyDiagnosis || "",
-    age: medicalData?.age || 0,
-    tumorSize: medicalData?.tumorSize || 0,
-    survivalRate: medicalData?.survivalRate || 0,
-    cancerStage: medicalData?.cancerStage || 0,
-    treatmentCost: medicalData?.treatmentCost || 0,
-    economicBurden: medicalData?.economicBurden || 0,
+    age: medicalData?.age || "",
+    tumorSize: medicalData?.tumorSize || "",
+    survivalRate: medicalData?.survivalRate || "",
+    cancerStage: medicalData?.cancerStage || "",
+    treatmentCost: medicalData?.treatmentCost || "",
+    economicBurden: medicalData?.economicBurden || "",
   });
 
   const [files, setFiles] = useState([]);
@@ -136,6 +135,14 @@ export default function TestPage({ user, fileData }) {
           body: formData,
         });
         data = await response.json();
+
+        if (data.error) {
+          toast({
+            description: data.error,
+            className: "error-toast",
+          });
+          return;
+        }
         // Update
         const res = await updateData({
           fileId: fileData.$id,
@@ -203,10 +210,10 @@ export default function TestPage({ user, fileData }) {
     ];
 
     return (
-      <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-blue-50 to-indigo-50 py-8 sm:py-12 px-3 sm:px-4 md:px-6 lg:px-8">
+      <div className="w-full overflow-x-hidden bg-gradient-to-br from-blue-50 to-indigo-50 py-6 sm:py-8 px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto w-full px-0 sm:px-2">
           {/* Header */}
-          <div className="text-center mb-8 sm:mb-12 px-2">
+          <div className="text-center mb-6 sm:mb-8 px-2">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Mouth Cancer Detection
             </h1>
@@ -216,7 +223,7 @@ export default function TestPage({ user, fileData }) {
           </div>
 
           {/* Progress Steps */}
-          <div className="mb-8 sm:mb-10 px-1 sm:px-2">
+          <div className="mb-6 sm:mb-8 px-1 sm:px-2">
             <div className="relative">
               {/* Steps */}
               <div className="relative flex justify-between z-10 w-full">
@@ -282,8 +289,8 @@ export default function TestPage({ user, fileData }) {
 
           {/* Main Content */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl transition-all duration-300 hover:shadow-xl sm:hover:shadow-2xl">
-            <div className="sm:p-4 lg:p-6">
-              <div className="mb-4 sm:mb-6 p-3 flex flex-col sm:flex-row justify-between items-center sm:items-center gap-3">
+            <div className="p-3 sm:p-4 lg:p-6">
+              <div className="mb-3 sm:mb-4 p-3 flex flex-col sm:flex-row justify-between items-center sm:items-center gap-3">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-900">
                   {steps[currentTest - 1]?.label || "Upload Image"}
                 </h2>
@@ -337,7 +344,7 @@ export default function TestPage({ user, fileData }) {
           </div>
 
           {/* Help Text */}
-          <div className="mt-6 sm:mt-8 text-center">
+          <div className="mt-4 sm:mt-6 text-center">
             <p className="text-xs sm:text-sm text-gray-500">
               Need help?{" "}
               <a

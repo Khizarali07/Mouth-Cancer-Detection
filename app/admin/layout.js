@@ -17,12 +17,12 @@ const AdminLayout = async ({ children }) => {
   if (!currentUser.isAdmin) return redirect("/dashboard");
 
   return (
-    <main className="flex h-screen">
+    <main className="flex min-h-screen">
       <Sidebar {...currentUser} />
-      <section className="flex h-full flex-1 flex-col">
+      <section className="flex min-h-screen flex-1 flex-col">
         <MobileNavigation {...currentUser} />
         <Header userId={currentUser.$id} accountId={currentUser.accountId} />
-        <div className="main-content">{children}</div>
+        <div className="main-content flex-1">{children}</div>
       </section>
       <Toaster />
     </main>

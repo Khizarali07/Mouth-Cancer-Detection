@@ -26,6 +26,11 @@ const navItems = [
     icon: "/assets/icons/user-circle.svg",
     url: "/admin/users",
   },
+  {
+    name: "Messages",
+    icon: "/assets/icons/message.svg",
+    url: "/admin/messages",
+  },
 ];
 
 const MobileNavigation = ({

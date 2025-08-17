@@ -16,13 +16,19 @@ import { cn } from "@/lib/utils";
 // import FileUploader from "@/components/FileUploader";
 
 const Dashboard = async () => {
-  // Parallel requests
+  // Get current user (this is safe since layout already checks authentication)
+  const CurrentUser = await getCurrentUser();
+  
+  // If somehow no user (shouldn't happen due to layout check), return early
+  if (!CurrentUser) {
+    return null; // Layout will handle redirect
+  }
+
+  // Now that we know user is authenticated, get files and total space
   const [files, totalSpace] = await Promise.all([
     getFiles({ types: [], limit: 10 }),
     getTotalSpaceUsed(),
   ]);
-
-  const CurrentUser = await getCurrentUser();
 
   // Get usage summary
   const usageSummary = getUsageSummary(totalSpace);

@@ -10,6 +10,11 @@ export const navItems = [
     url: "/dashboard/documents",
   },
   {
+    name: "AI Assistant",
+    icon: "/assets/icons/chat-bot.svg",
+    url: "/dashboard/chatbot",
+  },
+  {
     name: "Settings",
     icon: "/assets/icons/setting.svg",
     url: "/dashboard/settings",

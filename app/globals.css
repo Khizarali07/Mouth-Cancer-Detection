@@ -22,7 +22,7 @@
   }
 
   body {
-    @apply bg-white text-dark-200 min-h-screen overflow-hidden;
+    @apply bg-white text-dark-200 min-h-screen;
   }
 
   /* Remove scrollbar */
@@ -224,13 +224,14 @@
 
   /* Root Layout */
   .main-content {
-    @apply remove-scrollbar h-full flex-1 overflow-auto bg-light-400 px-5 py-7 sm:mr-7 sm:rounded-[30px] md:mb-7 md:px-9 md:py-10 !important;
+    @apply remove-scrollbar flex-1 bg-light-400 px-5 py-7 sm:mr-7 sm:rounded-[30px] md:mb-7 md:px-9 md:py-10 !important;
   }
 
   /* Dashboard */
   .dashboard-container {
     @apply mx-auto grid max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 xl:gap-10 !important;
   }
+
   .dashboard-summary-list {
     @apply mt-6 grid grid-cols-1 gap-4 xl:mt-10 xl:grid-cols-2 xl:gap-9 !important;
   }
@@ -446,7 +447,7 @@
 
   /* Sidebar */
   .sidebar {
-    @apply remove-scrollbar hidden bg-brand h-screen w-[90px] flex-col overflow-auto px-5 py-7 sm:flex lg:w-[280px] xl:w-[325px] !important;
+    @apply remove-scrollbar hidden bg-brand min-h-screen w-[90px] flex-col overflow-auto px-5 py-7 sm:flex lg:w-[280px] xl:w-[325px] !important;
   }
   .sidebar-nav {
     @apply h5 mt-9 flex-1 gap-1 text-light-400 !important;

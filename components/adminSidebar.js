@@ -17,6 +17,11 @@ const navItems = [
     icon: "/assets/icons/user-circle.svg",
     url: "/admin/users",
   },
+  {
+    name: "Messages",
+    icon: "/assets/icons/message.svg",
+    url: "/admin/messages",
+  },
 ];
 
 const Sidebar = ({ fullName, avatar, email }) => {
@@ -33,14 +38,8 @@ const Sidebar = ({ fullName, avatar, email }) => {
             height={52}
             className="lg:block"
           />
-          <p className="h4 text-white font-extrabold">Mouth Cancer Detection</p>
-          <Image
-            src="/assets/icons/Logo.png"
-            alt="logo"
-            width={52}
-            height={52}
-            className="lg:hidden"
-          />
+          <p className="h4 text-white font-extrabold hidden lg:block">Mouth Cancer Detection</p>
+      
         </div>
       </Link>
 

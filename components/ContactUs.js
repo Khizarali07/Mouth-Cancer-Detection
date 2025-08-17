@@ -5,6 +5,8 @@ import styles from "@/styles/Contact.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { userinfo, headings, ctaTexts } from "@/constants/userinfo";
+import { createMessage } from "@/lib/actions/messageActions";
+import { toast } from "sonner";
 
 const Contact = ({ currentUser }) => {
   const [name, setName] = useState(currentUser.fullName);
@@ -12,42 +14,63 @@ const Contact = ({ currentUser }) => {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sending");
+    
+    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+      toast.error("Please fill in all fields");
+      return;
+    }
 
-    const data = {
-      name,
-      email,
-      phone,
-      message,
-    };
-
-    // Reset form values after submitting
-    setName("");
-    setEmail("");
-    setPhone("");
-    setMessage("");
-
-    alert("You reached us!");
+    setIsLoading(true);
 
     try {
+      // Save message to database (if configured)
+      const messageData = {
+        userId: currentUser.$id,
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        message: message.trim(),
+      };
+
+      try {
+        await createMessage(messageData);
+        console.log("Message saved to database");
+      } catch (dbError) {
+        console.log("Database save failed (this is okay if messages collection isn't set up):", dbError.message);
+      }
+
+      // Send email notification (existing API)
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           Accept: "application/json, text/plain, */*",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(messageData),
       });
 
       if (response.status === 200) {
-        console.log("Response succeeded!");
-        setSubmitted(true);
+        console.log("Email sent successfully!");
       }
+
+      // Reset form and show success
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+      setSubmitted(true);
+      
+      toast.success("Your message has been sent successfully! We'll get back to you soon.");
+
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,9 +136,12 @@ const Contact = ({ currentUser }) => {
         <div className={styles.submit}>
           <button
             type="submit"
-            className="w-[100%] bg-[#4A90E2] text-white p-4 rounded-full"
+            disabled={isLoading}
+            className={`w-[100%] bg-[#4A90E2] text-white p-4 rounded-full ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#357ABD]'
+            }`}
           >
-            {ctaTexts.submitBTN}
+            {isLoading ? 'Sending...' : ctaTexts.submitBTN}
           </button>
         </div>
       </form>
