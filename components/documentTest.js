@@ -70,7 +70,7 @@ export default function TestPage({ user, fileData }) {
       });
     }
 
-    const file = files[0]; // single file
+    const file = files[0] ? files[0] : null; // single file
 
     const totalSpace = await getTotalSpaceUsed();
     const usedSpace = (await totalSpace?.used) || 0;
@@ -107,10 +107,13 @@ export default function TestPage({ user, fileData }) {
     try {
       // 🔥 Predict or skip directly to upload
       if (currentTest === 1) {
-        response = await fetch("http://localhost:5000/predict/mouth-image", {
-          method: "POST",
-          body: formData,
-        });
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/predict/mouth-image`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
         data = await response.json();
 
         if (data.error) {
@@ -130,10 +133,13 @@ export default function TestPage({ user, fileData }) {
         });
         setImageResult(data);
       } else if (currentTest === 2) {
-        response = await fetch("http://localhost:5000/predict/biopsy-image", {
-          method: "POST",
-          body: formData,
-        });
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/predict/biopsy-image`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
         data = await response.json();
 
         if (data.error) {
@@ -157,13 +163,16 @@ export default function TestPage({ user, fileData }) {
 
         console.log("This is backend data", backendData);
 
-        const response = await fetch("http://localhost:5000/predict/csv", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(backendData),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/predict/csv`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(backendData),
+          }
+        );
 
         data = await response.json();
 

@@ -323,15 +323,18 @@ const ActionDropdown = ({ file }) => {
           
           Please provide specific precautions, care instructions, and important medical advice for this patient's condition. Focus on actionable steps and important warnings.`;
 
-          const response = await fetch("http://localhost:5000/chatbot", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              message: contextualMessage,
-            }),
-          });
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/chatbot`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                message: contextualMessage,
+              }),
+            }
+          );
 
           let precautionText = "";
 

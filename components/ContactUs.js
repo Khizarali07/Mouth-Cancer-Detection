@@ -18,8 +18,8 @@ const Contact = ({ currentUser }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+
+    if (!name.trim() || !email.trim() || !message.trim()) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -40,7 +40,10 @@ const Contact = ({ currentUser }) => {
         await createMessage(messageData);
         console.log("Message saved to database");
       } catch (dbError) {
-        console.log("Database save failed (this is okay if messages collection isn't set up):", dbError.message);
+        console.log(
+          "Database save failed (this is okay if messages collection isn't set up):",
+          dbError.message
+        );
       }
 
       // Send email notification (existing API)
@@ -63,9 +66,10 @@ const Contact = ({ currentUser }) => {
       setPhone("");
       setMessage("");
       setSubmitted(true);
-      
-      toast.success("Your message has been sent successfully! We'll get back to you soon.");
 
+      toast.success(
+        "Your message has been sent successfully! We'll get back to you soon."
+      );
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Failed to send message. Please try again.");
@@ -113,7 +117,6 @@ const Contact = ({ currentUser }) => {
             type="tel"
             name="phone"
             value={phone}
-            required
             autoComplete="off"
             onChange={(e) => setPhone(e.target.value)}
             className={styles.inputField}
@@ -138,10 +141,10 @@ const Contact = ({ currentUser }) => {
             type="submit"
             disabled={isLoading}
             className={`w-[100%] bg-[#4A90E2] text-white p-4 rounded-full ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#357ABD]'
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#357ABD]"
             }`}
           >
-            {isLoading ? 'Sending...' : ctaTexts.submitBTN}
+            {isLoading ? "Sending..." : ctaTexts.submitBTN}
           </button>
         </div>
       </form>

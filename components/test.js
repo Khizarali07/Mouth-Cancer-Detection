@@ -62,7 +62,7 @@ export default function TestPage({ user }) {
     try {
       // 🔥 Predict or skip directly to upload
       const response = await fetch(
-        "http://localhost:5000/predict/mouth-image",
+        `${process.env.NEXT_PUBLIC_API_URL}/predict/mouth-image`,
         {
           method: "POST",
           body: formData,
