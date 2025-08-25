@@ -168,7 +168,7 @@ Please provide a personalized response based on this specific test data and pati
 
       // Call the API
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/chatbot`,
+        `${process.env.NEXT_PUBLIC_API_URL}/chatbot/`,
         {
           method: "POST",
           headers: {
