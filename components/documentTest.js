@@ -70,7 +70,11 @@ export default function TestPage({ user, fileData }) {
       });
     }
 
-    const file = files[0] ? files[0] : null; // single file
+    let file = null;
+
+    if (currentTest != 3) {
+      file = files[0]; // single file
+    }
 
     const totalSpace = await getTotalSpaceUsed();
     const usedSpace = (await totalSpace?.used) || 0;
