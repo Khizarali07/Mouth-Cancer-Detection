@@ -156,7 +156,10 @@ async function DocumentPage({ params }) {
           />
           <ResultCard
             title="Confidence Level"
-            value={`${Math.round((imageResult?.confidence || 0) * 100)}%`}
+            value={`${Math.round(
+              ((biopsyResult?.confidence + imageResult?.confidence) / 2 || 0) *
+                100
+            )}%`}
             variant="default"
           />
         </div>

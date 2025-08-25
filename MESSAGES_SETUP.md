@@ -14,31 +14,37 @@ You need to create a new collection in your Appwrite database with the following
 ### Collection Name: `messages`
 
 ### Attributes:
+
 1. **userId** (String, Required)
+
    - Type: String
    - Size: 255
    - Required: Yes
    - Description: References the user who sent the message
 
 2. **name** (String, Required)
+
    - Type: String
    - Size: 255
    - Required: Yes
    - Description: User's full name
 
 3. **email** (String, Required)
+
    - Type: String
    - Size: 255
    - Required: Yes
    - Description: User's email address
 
 4. **phone** (String, Required)
+
    - Type: String
    - Size: 50
    - Required: Yes
    - Description: User's phone number
 
 5. **message** (String, Required)
+
    - Type: String
    - Size: 10000
    - Required: Yes
@@ -52,11 +58,13 @@ You need to create a new collection in your Appwrite database with the following
    - Description: Message status (pending, in-progress, completed)
 
 ### Indexes:
+
 - Create an index on `userId` for faster queries
 - Create an index on `status` for filtering
 - Create an index on `$createdAt` for sorting
 
 ### Permissions:
+
 - **Create**: Users (authenticated users can create messages)
 - **Read**: Admins only
 - **Update**: Admins only (for status updates)

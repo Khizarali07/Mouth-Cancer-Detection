@@ -70,6 +70,8 @@ export default function TestPage({ user }) {
       );
       const data = await response.json();
 
+      console.log("data:", data);
+
       if (data.error) {
         toast({
           description: data.error,

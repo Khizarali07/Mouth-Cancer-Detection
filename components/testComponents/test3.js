@@ -81,7 +81,16 @@ export default function Test3({
     const isValid = requiredFields.every((field) => {
       const value = formData[field];
       // For numeric fields, check if value is not empty string and not null/undefined
-      if (["age", "tumorSize", "survivalRate", "cancerStage", "treatmentCost", "economicBurden"].includes(field)) {
+      if (
+        [
+          "age",
+          "tumorSize",
+          "survivalRate",
+          "cancerStage",
+          "treatmentCost",
+          "economicBurden",
+        ].includes(field)
+      ) {
         return value !== undefined && value !== null && value !== "";
       }
       // For other fields, check if value is not empty
@@ -102,7 +111,9 @@ export default function Test3({
         name === "cancerStage" ||
         name === "treatmentCost" ||
         name === "economicBurden"
-          ? value === "" ? "" : Number(value)
+          ? value === ""
+            ? ""
+            : Number(value)
           : value,
     }));
   };
