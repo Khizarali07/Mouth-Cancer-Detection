@@ -324,7 +324,7 @@ const ActionDropdown = ({ file }) => {
           Please provide specific precautions, care instructions, and important medical advice for this patient's condition. Focus on actionable steps and important warnings.`;
 
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/chatbot`,
+            `${process.env.NEXT_PUBLIC_API_URL}/chatbot/`,
             {
               method: "POST",
               headers: {
