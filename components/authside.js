@@ -8,7 +8,7 @@ function Authside() {
         <Link href="/">
           <div className="flex items-center gap-2">
             <Image
-              src="/assets/icons/logo.png"
+              src="/assets/icons/Logo.png"
               alt="logo"
               width={52}
               height={52}
