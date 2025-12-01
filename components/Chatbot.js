@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { getCurrentUser } from "@/lib/actions/userActions";
 import { getFiles } from "@/lib/actions/fileActions";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
 
 const Chatbot = () => {
   const [user, setUser] = useState(null);
@@ -653,11 +654,20 @@ Please provide a personalized response based on this specific test data and pati
                         }`}
                       >
                         <div className="text-sm leading-relaxed">
-                          {message.content.split("\n").map((line, index) => (
-                            <p key={index} className={index > 0 ? "mt-2" : ""}>
-                              {line}
-                            </p>
-                          ))}
+                          {message.type === "ai" ? (
+                            <div className="prose prose-invert prose-sm max-w-none prose-headings:text-gray-100 prose-headings:font-semibold prose-headings:mt-3 prose-headings:mb-2 prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-strong:text-white prose-strong:font-semibold">
+                              <ReactMarkdown>{message.content}</ReactMarkdown>
+                            </div>
+                          ) : (
+                            message.content.split("\n").map((line, index) => (
+                              <p
+                                key={index}
+                                className={index > 0 ? "mt-2" : ""}
+                              >
+                                {line}
+                              </p>
+                            ))
+                          )}
                         </div>
                         {message.testReference && (
                           <div className="mt-3 pt-2 border-t border-slate-600">
