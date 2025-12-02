@@ -368,33 +368,204 @@ const ActionDropdown = ({ file }) => {
           addSection("IMPORTANT PRECAUTIONS & CARE INSTRUCTIONS");
 
           checkPageBreak(40);
-          doc.setTextColor(...secondaryColor);
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "normal");
 
-          // Split the text into manageable lines
-          const maxWidth = pageWidth - 50;
-          const lines = doc.splitTextToSize(precautionText, maxWidth);
+          // Function to parse and render markdown-formatted text
+          const renderMarkdownToPDF = (text) => {
+            const maxWidth = pageWidth - 50;
+            const lines = text.split("\n");
 
-          // Add some spacing and formatting
-          lines.forEach((line, index) => {
-            checkPageBreak(8);
+            lines.forEach((line) => {
+              checkPageBreak(10);
 
-            // Check if line starts with a number (for numbered lists)
-            if (line.match(/^\d+\./)) {
-              doc.setFont("helvetica", "bold");
-              doc.setTextColor(...primaryColor);
-            } else if (line.trim() === "") {
-              y += 3; // Extra space for empty lines
-              return;
-            } else {
-              doc.setFont("helvetica", "normal");
-              doc.setTextColor(...secondaryColor);
-            }
+              // Remove leading/trailing whitespace
+              let trimmedLine = line.trim();
 
-            doc.text(line, 25, y);
-            y += 6;
-          });
+              // Skip empty lines but add spacing
+              if (trimmedLine === "") {
+                y += 4;
+                return;
+              }
+
+              // Check for main headers (###)
+              if (trimmedLine.startsWith("### ")) {
+                const headerText = trimmedLine
+                  .replace(/^###\s*/, "")
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(13);
+                doc.setTextColor(...primaryColor);
+                y += 4; // Extra space before main header
+                const headerLines = doc.splitTextToSize(headerText, maxWidth);
+                headerLines.forEach((hLine) => {
+                  checkPageBreak(10);
+                  doc.text(hLine, 25, y);
+                  y += 7;
+                });
+                y += 2;
+                return;
+              }
+
+              // Check for sub-headers (####)
+              if (trimmedLine.startsWith("#### ")) {
+                const subHeaderText = trimmedLine
+                  .replace(/^####\s*/, "")
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(...secondaryColor);
+                y += 3; // Extra space before sub-header
+                const subHeaderLines = doc.splitTextToSize(
+                  subHeaderText,
+                  maxWidth
+                );
+                subHeaderLines.forEach((shLine) => {
+                  checkPageBreak(8);
+                  doc.text(shLine, 28, y);
+                  y += 6;
+                });
+                y += 1;
+                return;
+              }
+
+              // Check for numbered list items (1., 2., etc.)
+              const numberedMatch = trimmedLine.match(
+                /^(\d+)\.\s*\*\*(.*?)\*\*/
+              );
+              if (numberedMatch) {
+                const number = numberedMatch[1];
+                const boldText = numberedMatch[2];
+                const remainingText = trimmedLine
+                  .replace(/^\d+\.\s*\*\*.*?\*\*\s*/, "")
+                  .replace(/\*\*/g, "");
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(...primaryColor);
+                y += 2;
+                doc.text(`${number}. ${boldText}`, 25, y);
+                y += 6;
+
+                if (remainingText) {
+                  doc.setFont("helvetica", "normal");
+                  doc.setFontSize(10);
+                  doc.setTextColor(...secondaryColor);
+                  const remainingLines = doc.splitTextToSize(
+                    remainingText,
+                    maxWidth - 10
+                  );
+                  remainingLines.forEach((rLine) => {
+                    checkPageBreak(7);
+                    doc.text(rLine, 30, y);
+                    y += 5;
+                  });
+                }
+                return;
+              }
+
+              // Check for bullet points with bold labels (- **Label:** content)
+              const bulletBoldMatch = trimmedLine.match(
+                /^-\s*\*\*(.*?)\*\*:?\s*(.*)/
+              );
+              if (bulletBoldMatch) {
+                const boldLabel = bulletBoldMatch[1];
+                const content = bulletBoldMatch[2].replace(/\*\*/g, "");
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.setTextColor(...secondaryColor);
+                doc.text(`• ${boldLabel}:`, 30, y);
+
+                if (content) {
+                  const labelWidth = doc.getTextWidth(`• ${boldLabel}: `);
+                  doc.setFont("helvetica", "normal");
+                  doc.setTextColor(60, 60, 60);
+                  const contentLines = doc.splitTextToSize(
+                    content,
+                    maxWidth - labelWidth - 10
+                  );
+                  if (contentLines.length === 1) {
+                    doc.text(content, 30 + labelWidth, y);
+                    y += 6;
+                  } else {
+                    doc.text(contentLines[0], 30 + labelWidth, y);
+                    y += 6;
+                    for (let i = 1; i < contentLines.length; i++) {
+                      checkPageBreak(6);
+                      doc.text(contentLines[i], 35, y);
+                      y += 5;
+                    }
+                  }
+                } else {
+                  y += 6;
+                }
+                return;
+              }
+
+              // Check for simple bullet points (- text)
+              if (trimmedLine.startsWith("- ")) {
+                const bulletContent = trimmedLine
+                  .substring(2)
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.setTextColor(...secondaryColor);
+                const bulletLines = doc.splitTextToSize(
+                  `• ${bulletContent}`,
+                  maxWidth - 10
+                );
+                bulletLines.forEach((bLine, idx) => {
+                  checkPageBreak(6);
+                  doc.text(bLine, idx === 0 ? 30 : 35, y);
+                  y += 5;
+                });
+                y += 1;
+                return;
+              }
+
+              // Regular text - check for inline bold (**text**)
+              let processedLine = trimmedLine;
+              const boldParts = processedLine.match(/\*\*(.*?)\*\*/g);
+
+              if (boldParts) {
+                // Line contains bold text - render with mixed formatting
+                let xPos = 25;
+                const parts = processedLine.split(/(\*\*.*?\*\*)/);
+
+                parts.forEach((part) => {
+                  if (part.startsWith("**") && part.endsWith("**")) {
+                    // Bold text
+                    const boldContent = part.slice(2, -2);
+                    doc.setFont("helvetica", "bold");
+                    doc.setFontSize(10);
+                    doc.setTextColor(...secondaryColor);
+                    doc.text(boldContent, xPos, y);
+                    xPos += doc.getTextWidth(boldContent);
+                  } else if (part) {
+                    // Normal text
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(10);
+                    doc.setTextColor(60, 60, 60);
+                    doc.text(part, xPos, y);
+                    xPos += doc.getTextWidth(part);
+                  }
+                });
+                y += 6;
+              } else {
+                // No bold formatting - render as plain text
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.setTextColor(...secondaryColor);
+                const plainLines = doc.splitTextToSize(processedLine, maxWidth);
+                plainLines.forEach((pLine) => {
+                  checkPageBreak(6);
+                  doc.text(pLine, 25, y);
+                  y += 5;
+                });
+              }
+            });
+          };
+
+          renderMarkdownToPDF(precautionText);
 
           y += 10; // Extra space after precautions section
         } catch (error) {
@@ -403,37 +574,152 @@ const ActionDropdown = ({ file }) => {
           // Add fallback precautions section
           addSection("IMPORTANT PRECAUTIONS & CARE INSTRUCTIONS");
 
-          const fallbackText = `⚠️ Unable to connect to AI service for personalized precautions.
+          const fallbackText = `### General Precautions and Care Instructions
 
-General Precautions:
-• Follow all medical recommendations from your healthcare provider
-• Maintain regular follow-up appointments
-• Avoid tobacco and excessive alcohol consumption  
-• Practice good oral hygiene
-• Monitor for any changes in your oral health
-• Seek immediate medical attention for concerning symptoms
-• Follow prescribed treatment plans carefully
+#### 1. **Regular Medical Follow-ups**
+- **Frequency:** Schedule regular check-ups as recommended by your healthcare provider.
+- **Purpose:** Monitor your condition and detect any changes early.
+
+#### 2. **Lifestyle Modifications**
+- **Tobacco:** Avoid all tobacco products including cigarettes, cigars, and smokeless tobacco.
+- **Alcohol:** Limit or avoid alcohol consumption as it increases oral cancer risk.
+
+#### 3. **Maintain Good Oral Hygiene**
+- **Brushing:** Brush teeth at least twice daily with fluoride toothpaste.
+- **Flossing:** Floss daily to remove food particles and plaque.
+- **Dental Visits:** Schedule professional dental cleanings regularly.
+
+#### 4. **Monitor for Warning Signs**
+- **Self-examination:** Check your mouth regularly for any changes.
+- **Watch for:** Persistent sores, lumps, white/red patches, or difficulty swallowing.
+- **Action:** Seek immediate medical attention if you notice concerning symptoms.
+
+#### 5. **Follow Treatment Plans**
+- **Medications:** Take all prescribed medications as directed.
+- **Appointments:** Attend all scheduled follow-up appointments.
+- **Communication:** Report any side effects or concerns to your healthcare provider.
 
 Please consult with your healthcare provider for specific guidance related to your condition.`;
 
-          checkPageBreak(30);
-          doc.setTextColor(...secondaryColor);
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "normal");
+          // Function to parse and render markdown-formatted text (fallback version)
+          const renderFallbackMarkdown = (text) => {
+            const maxWidth = pageWidth - 50;
+            const lines = text.split("\n");
 
-          const lines = doc.splitTextToSize(fallbackText, pageWidth - 50);
-          lines.forEach((line) => {
-            checkPageBreak(8);
-            if (line.startsWith("•") || line.startsWith("⚠️")) {
-              doc.setTextColor(...accentColor);
-              doc.setFont("helvetica", "bold");
-            } else {
-              doc.setTextColor(...secondaryColor);
+            lines.forEach((line) => {
+              checkPageBreak(10);
+              let trimmedLine = line.trim();
+
+              if (trimmedLine === "") {
+                y += 4;
+                return;
+              }
+
+              // Main headers (###)
+              if (trimmedLine.startsWith("### ")) {
+                const headerText = trimmedLine
+                  .replace(/^###\s*/, "")
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(13);
+                doc.setTextColor(...primaryColor);
+                y += 4;
+                doc.text(headerText, 25, y);
+                y += 8;
+                return;
+              }
+
+              // Sub-headers (####)
+              if (trimmedLine.startsWith("#### ")) {
+                const subHeaderText = trimmedLine
+                  .replace(/^####\s*/, "")
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(...secondaryColor);
+                y += 3;
+                doc.text(subHeaderText, 28, y);
+                y += 7;
+                return;
+              }
+
+              // Bullet points with bold labels
+              const bulletBoldMatch = trimmedLine.match(
+                /^-\s*\*\*(.*?)\*\*:?\s*(.*)/
+              );
+              if (bulletBoldMatch) {
+                const boldLabel = bulletBoldMatch[1];
+                const content = bulletBoldMatch[2].replace(/\*\*/g, "");
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(10);
+                doc.setTextColor(...secondaryColor);
+                doc.text(`• ${boldLabel}:`, 30, y);
+
+                if (content) {
+                  const labelWidth = doc.getTextWidth(`• ${boldLabel}: `);
+                  doc.setFont("helvetica", "normal");
+                  doc.setTextColor(60, 60, 60);
+                  const contentLines = doc.splitTextToSize(
+                    content,
+                    maxWidth - labelWidth - 10
+                  );
+                  if (contentLines.length === 1) {
+                    doc.text(content, 30 + labelWidth, y);
+                    y += 6;
+                  } else {
+                    doc.text(contentLines[0], 30 + labelWidth, y);
+                    y += 6;
+                    for (let i = 1; i < contentLines.length; i++) {
+                      checkPageBreak(6);
+                      doc.text(contentLines[i], 35, y);
+                      y += 5;
+                    }
+                  }
+                } else {
+                  y += 6;
+                }
+                return;
+              }
+
+              // Simple bullet points
+              if (trimmedLine.startsWith("- ")) {
+                const bulletContent = trimmedLine
+                  .substring(2)
+                  .replace(/\*\*/g, "");
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.setTextColor(...secondaryColor);
+                const bulletLines = doc.splitTextToSize(
+                  `• ${bulletContent}`,
+                  maxWidth - 10
+                );
+                bulletLines.forEach((bLine, idx) => {
+                  checkPageBreak(6);
+                  doc.text(bLine, idx === 0 ? 30 : 35, y);
+                  y += 5;
+                });
+                y += 1;
+                return;
+              }
+
+              // Regular text
               doc.setFont("helvetica", "normal");
-            }
-            doc.text(line, 25, y);
-            y += 6;
-          });
+              doc.setFontSize(10);
+              doc.setTextColor(...secondaryColor);
+              const plainLines = doc.splitTextToSize(
+                trimmedLine.replace(/\*\*/g, ""),
+                maxWidth
+              );
+              plainLines.forEach((pLine) => {
+                checkPageBreak(6);
+                doc.text(pLine, 25, y);
+                y += 5;
+              });
+            });
+          };
+
+          renderFallbackMarkdown(fallbackText);
 
           y += 10;
         }
